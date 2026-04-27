@@ -1,3 +1,2 @@
-# Welcome to your Lovable project
+# My genius website
 
-TODO: Document your project here

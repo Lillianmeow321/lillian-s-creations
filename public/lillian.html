@@ -1465,12 +1465,12 @@ footer {
     <div class="window-titlebar">
       <div class="window-dots"><div class="window-dot"></div><div class="window-dot"></div><div class="window-dot"></div></div>
       <div class="window-title">~/projects/</div>
-      <div class="window-meta">3 items</div>
+      <div class="window-meta">6 items + aesthetic devices</div>
     </div>
     <div class="window-body">
       <div class="projects-header">
         <h2 class="projects-title">things I've <em>built</em>.</h2>
-        <div class="projects-meta">3 projects<br>2024 — 2025</div>
+        <div class="projects-meta">6 projects<br>2023 — 2025</div>
       </div>
 
       <div class="proj-list">
@@ -1478,39 +1478,102 @@ footer {
         <div class="proj-item">
           <div class="proj-num">/001</div>
           <div class="proj-content">
-            <h3 class="proj-name">Hound<em>.</em></h3>
-            <p class="proj-tagline">"the dog that fetches your research"</p>
-            <p class="proj-desc">AI-powered investment research assistant. Multi-agent Python system — planner, retriever, analyst, reviewer, and market sizing agents working in concert. Built from 38 investment memos at Monad Ventures; uses RAG + live web search to auto-generate competitive analysis and market sizing reports.</p>
+            <h3 class="proj-name">Hound<em>：边牧分析师.</em></h3>
+            <p class="proj-tagline">"the border collie that fetches your research"</p>
+            <p class="proj-desc">从 0 到 1 搭了一套多 Agent 投研助手。四个 Agent 分工协作：规划、检索、分析、审核，生成最符合投资人和咨询师语言习惯的投研报告与市场规模测算。知识库来自脱敏后的一线投研经验。<br><br>为了让小边牧快跑：5 个维度检索并行，端到端延迟从 60s 压到 25s。多轮对话里，我设计了意图识别（新报告 / 追问 / 修改）+ 参数继承，用户不必重复自己。<br><br>RAG 链路折腾了几轮——从 chromadb 迁到 Qdrant、本地 BGE 迁到 Jina API，就为了躲开 2GB 的 torch 依赖、让云端构建不超时。针对大模型输出不稳定，我加了审核 Agent 做质量打分 + 自动重试 + 向用户提出潜在加分点。</p>
             <div class="proj-tags">
-              <span class="proj-tag">Python</span>
-              <span class="proj-tag">LangChain</span>
               <span class="proj-tag">Qdrant</span>
-              <span class="proj-tag">DeepSeek API</span>
-              <span class="proj-tag">RAG</span>
+              <span class="proj-tag">DeepSeek v4</span>
+              <span class="proj-tag">Next.js</span>
+              <span class="proj-tag">FastAPI</span>
+              <span class="proj-tag">Tavily</span>
               <span class="proj-tag">Multi-Agent</span>
             </div>
           </div>
-          <div class="proj-thumb">
-            hound.png
-          </div>
+          <div class="proj-thumb">hound.png</div>
           <div class="proj-status">
-            <span class="wip">in dev</span>
-            <div class="proj-arrow">github →</div>
+            <span class="live">live</span>
+            <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow">visit →</a>
+          </div>
+        </div>
+
+        <!-- Painpal -->
+        <div class="proj-item">
+          <div class="proj-num">/002</div>
+          <div class="proj-content">
+            <h3 class="proj-name">Painpal<em>.</em></h3>
+            <p class="proj-tagline">"UX research × UI design for multimodal pain tracking"</p>
+            <p class="proj-desc">为多模态疼痛追踪应用设计了完整的定性研究流程。深度访谈 Adapt Community Network 的专业人员与临床医生，围绕三个问题：临床工作流是什么样的？疼痛记录的真实障碍在哪里？幻肢痛的实操治疗方法是什么？<br><br>把答案翻译成技术需求规格：多模态疼痛输入（文字 / 语音 / 图像）、色盲友好 UI 标准、CBT 集成交互框架，并完成 UI 设计。</p>
+            <div class="proj-tags">
+              <span class="proj-tag">Figma</span>
+              <span class="proj-tag">UX Research</span>
+              <span class="proj-tag">定性研究</span>
+              <span class="proj-tag">Healthcare</span>
+            </div>
+          </div>
+          <div class="proj-thumb">painpal.png</div>
+          <div class="proj-status">
+            <span class="wip">research</span>
+            <div class="proj-arrow">case study →</div>
+          </div>
+        </div>
+
+        <!-- 狗狗夸夸机 -->
+        <div class="proj-item">
+          <div class="proj-num">/003</div>
+          <div class="proj-content">
+            <h3 class="proj-name">狗狗夸夸机<em>.</em></h3>
+            <p class="proj-tagline">"nine dogs, nine personalities, one good boy you"</p>
+            <p class="proj-desc">Prompt 层的轻量多 Agent 实验。9 套 Prompt 模板对应 9 种狗狗性格。我把性格拆成四维属性：语言风格、情绪基调、句式偏好、表情符号——显式注入 system prompt，再用 few-shot 锚定。<br><br>最好玩的是 5% 概率触发的"评审团模式"：狗狗们会七嘴八舌评价你，显式约束每只狗的关注焦点和禁用词，防止它们当学人精。犬种头像全部是纯 SVG 手绘，不依赖任何外部图片。</p>
+            <div class="proj-tags">
+              <span class="proj-tag">SVG</span>
+              <span class="proj-tag">React</span>
+              <span class="proj-tag">Anthropic API</span>
+              <span class="proj-tag">Prompt Engineering</span>
+            </div>
+          </div>
+          <div class="proj-thumb">dogge.png</div>
+          <div class="proj-status">
+            <span class="live">live</span>
+            <a href="https://doggepuff.lovable.app/" target="_blank" class="proj-arrow">visit →</a>
+          </div>
+        </div>
+
+        <!-- Univonest -->
+        <div class="proj-item">
+          <div class="proj-num">/004</div>
+          <div class="proj-content">
+            <h3 class="proj-name">Univonest<em>.</em></h3>
+            <p class="proj-tagline">"where international students sell their ikea"</p>
+            <p class="proj-desc">留学生 P2P 二手交易平台，担任联合创始人，负责产品与法务。先做了 20+ 用户访谈和情境调查，验证核心假设——真正痛点是信任机制、跨境支付、物品核验。<br><br>跑了多场 Hackathon 与创业路演。然后从 0 到 1 搞定网站和小程序上线：用户流程梳理、原型设计、可用性测试，全包。还独立调研了美国实体注册、小程序备案、跨境合规要求等法务判断。</p>
+            <div class="proj-tags">
+              <span class="proj-tag">Co-founder</span>
+              <span class="proj-tag">法务调研</span>
+              <span class="proj-tag">Figma</span>
+              <span class="proj-tag">Canva</span>
+              <span class="proj-tag">UX</span>
+            </div>
+          </div>
+          <div class="proj-thumb">univonest.png</div>
+          <div class="proj-status">
+            <span class="live">live</span>
+            <a href="https://univonest-web.vercel.app" target="_blank" class="proj-arrow">visit →</a>
           </div>
         </div>
 
         <!-- 巡礼咪 -->
         <div class="proj-item">
-          <div class="proj-num">/002</div>
+          <div class="proj-num">/005</div>
           <div class="proj-content">
-            <h3 class="proj-name">巡礼咪<em></em></h3>
+            <h3 class="proj-name">巡礼咪<em>.</em></h3>
             <p class="proj-tagline">"if your favorite anime had a travel agent"</p>
-            <p class="proj-desc">Anime pilgrimage itinerary agent built on Coze. Input an anime + destination, get a full guide with scene comparisons, photography tips, and live weather. A pre-Hound exploration of agent orchestration on a low-code platform — proved the concept that pushed me toward writing my own multi-agent stack.</p>
+            <p class="proj-desc">基于 Coze 搭建的圣地巡礼规划 Agent，用自定义 Skill 串联私有知识库检索 + 天气 / 酒店 / 交通 API，配合多轮对话的参数继承、超长截断与降级策略——纯 Agent 工作流。<br><br>核心资产是自己积累的 10+ 日本巡礼地的情感化知识库，让输出真的像动漫迷写的、有温度、不机械。</p>
             <div class="proj-tags">
               <span class="proj-tag">Coze</span>
+              <span class="proj-tag">Dify</span>
               <span class="proj-tag">Agent</span>
-              <span class="proj-tag">RAG</span>
-              <span class="proj-tag">Low-code</span>
+              <span class="proj-tag">Function Call</span>
+              <span class="proj-tag">私有知识库</span>
             </div>
           </div>
           <div class="proj-thumb">junlimi.png</div>
@@ -1520,24 +1583,24 @@ footer {
           </div>
         </div>
 
-        <!-- Univonest -->
+        <!-- 美学装置 -->
         <div class="proj-item">
-          <div class="proj-num">/003</div>
+          <div class="proj-num">/006</div>
           <div class="proj-content">
-            <h3 class="proj-name">Univonest<em>.</em></h3>
-            <p class="proj-tagline">"where international students sell their ikea"</p>
-            <p class="proj-desc">Second-hand marketplace for international students. Co-founder, leading product, legal, UX/UI. Live on web + WeChat Mini Program. Real listings, real users, real shipping headaches.</p>
+            <h3 class="proj-name">美学装置<em> · aesthetic devices.</em></h3>
+            <p class="proj-tagline">"three small things that aren't useful, but feel like something"</p>
+            <p class="proj-desc"><strong>呼吸 ——</strong> 一个 4 秒吸 / 4 秒呼的冥想装置，用 cubic-bezier 模拟呼吸顶端的停顿感，加上手写 Web Audio 合成的钟声与卷积混响。<br><br><strong>一生中有多少个星期天 ——</strong> 输入出生日期，就能看到"一生中已经度过几个星期天，还剩几个"的可视化图表，采取黑白讣告的美学。灵感来自我最近两年每天都在感叹的：「时间不够用啊！」<br><br><strong>熵 ——</strong> 字随时间崩塌腐烂，点击可拯救。我想传达的是人从"神话时代"走出后的茫然感：面对不断失序的现实，想要挽回却只如掬水在手，水从指尖流下。</p>
             <div class="proj-tags">
-              <span class="proj-tag">Founder</span>
-              <span class="proj-tag">Product</span>
-              <span class="proj-tag">UX/UI</span>
-              <span class="proj-tag">WeChat MP</span>
+              <span class="proj-tag">Web Audio</span>
+              <span class="proj-tag">CSS Art</span>
+              <span class="proj-tag">Generative</span>
+              <span class="proj-tag">Poetic Computing</span>
             </div>
           </div>
-          <div class="proj-thumb">univonest.png</div>
+          <div class="proj-thumb">aesthetic.png</div>
           <div class="proj-status">
-            <span class="live">live</span>
-            <div class="proj-arrow">visit →</div>
+            <span class="wip">3 pieces</span>
+            <div class="proj-arrow">explore →</div>
           </div>
         </div>
       </div>

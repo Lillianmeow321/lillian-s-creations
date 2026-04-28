@@ -1516,14 +1516,14 @@ body::before {
 .project-mascot-cat {
   left: 0;
   top: 18%;
-  height: 283px;
+  height: 226px;
   transform: none;
 }
 
 .project-mascot-dog {
   right: 0;
   top: 55%;
-  height: 325px;
+  height: 260px;
   transform: none;
 }
 
@@ -1691,6 +1691,9 @@ footer {
     display: none;
   }
   .desktop-icon { display: none; }
+  .hero-resume {
+    display: flex !important;
+  }
   .about-grid { grid-template-columns: 1fr; }
   .about-copy,
   .about-side { order: initial; }
@@ -1732,9 +1735,6 @@ footer {
     transform: translateX(-50%);
     margin-top: 14px;
     opacity: 1;
-  }
-  #particles {
-    display: none;
   }
   .project-mascot {
     display: block;
@@ -2691,7 +2691,8 @@ reveals.forEach(el => observer.observe(el));
   function syncMascots() {
     const projectRect = projects.getBoundingClientRect();
     const expRect = experience.getBoundingClientRect();
-    const active = projectRect.top < window.innerHeight * 0.75 && expRect.bottom > window.innerHeight * 0.2;
+    const viewportMid = window.innerHeight * 0.5;
+    const active = projectRect.top <= viewportMid && expRect.bottom >= viewportMid;
     document.body.classList.toggle('project-creatures-active', active);
   }
 

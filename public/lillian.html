@@ -1723,6 +1723,13 @@ footer {
     display: flex !important;
   }
   .about-grid { grid-template-columns: 1fr; }
+  .about-grid {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    gap: 28px;
+    overflow: hidden;
+  }
   .about-copy,
   .about-side { order: initial; }
   .about-copy {
@@ -1731,11 +1738,13 @@ footer {
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
+    padding-right: 10px;
   }
   .about-body {
-    font-size: 13px;
-    line-height: 1.72;
-    margin-bottom: 18px;
+    font-family: 'Songti SC', 'SimSun', 'STSong', serif;
+    font-size: 14px;
+    line-height: 1.68;
+    margin-bottom: 16px;
     width: 100%;
     max-width: 100%;
     overflow-wrap: anywhere;
@@ -1753,9 +1762,12 @@ footer {
   }
   .about-side {
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
   .about-portrait {
     width: 100%;
+    overflow: hidden;
   }
   .proj-item { grid-template-columns: 1fr; }
   .proj-thumb {
@@ -1773,7 +1785,11 @@ footer {
     padding-top: 0;
   }
   .proj-arrow {
-    font-size: 22px;
+    font-family: 'Songti SC', 'SimSun', 'STSong', serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
   }
   .exp-item { grid-template-columns: 1fr; gap: 8px; }
   .exp-columns { grid-template-columns: 1fr; gap: 40px; }
@@ -1794,6 +1810,15 @@ footer {
     transform: translateX(-50%);
     margin-top: 14px;
     opacity: 1;
+    gap: 2px;
+  }
+  .hero-resume .icon-label {
+    padding: 2px 8px;
+    min-height: 18px;
+    border-radius: 4px;
+    background: rgba(248, 245, 239, 0.68);
+    border: 1px solid rgba(255,255,255,0.32);
+    box-shadow: 0 1px 4px rgba(26,22,18,0.05);
   }
   .project-mascot {
     display: block;
@@ -1818,9 +1843,54 @@ footer {
     height: 163px;
   }
   .about-portrait img {
-    width: min(84vw, 360px);
+    width: min(82vw, 352px);
     max-width: none;
-    transform: translateX(-10%);
+    transform: translateX(-5%);
+  }
+  .projects-header {
+    margin-bottom: 26px;
+    padding-bottom: 16px;
+    align-items: flex-start;
+  }
+  .projects-title,
+  .about-title,
+  .podcast-name,
+  .podcast-sub,
+  .blog-title,
+  .exp-company,
+  .exp-role,
+  .exp-desc,
+  .proj-name,
+  .proj-desc,
+  .meta-val {
+    font-family: 'Songti SC', 'SimSun', 'STSong', serif;
+  }
+  .projects-title {
+    font-size: clamp(32px, 8vw, 42px);
+    letter-spacing: 0;
+    line-height: 1.06;
+  }
+  .projects-meta,
+  .proj-num {
+    font-size: 10px;
+  }
+  .proj-item {
+    gap: 16px;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+  .proj-name {
+    font-size: 28px;
+    line-height: 1.08;
+    margin-bottom: 8px;
+  }
+  .proj-desc {
+    font-size: 14px;
+    line-height: 1.72;
+  }
+  #about .window-body,
+  #projects .window-body {
+    overflow: hidden;
   }
   .podcast-cta {
     grid-template-columns: 1fr;

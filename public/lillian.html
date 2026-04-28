@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Xintong Li ・ Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1685,25 +1685,22 @@ footer {
     top: 0;
     left: 0;
     right: 0;
-    height: 34px;
-    min-height: 34px;
+    height: calc(34px + env(safe-area-inset-top, 0px));
+    min-height: calc(34px + env(safe-area-inset-top, 0px));
     padding: 0 10px;
-    padding-top: 0;
-    overflow: visible;
+    padding-top: env(safe-area-inset-top, 0px);
+    overflow: hidden;
     align-items: center;
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
     transform: none !important;
-    background: rgba(239, 234, 226, 0.86);
+    background: rgba(239, 234, 226, 0.82);
     backdrop-filter: blur(28px) saturate(160%);
     -webkit-backdrop-filter: blur(28px) saturate(160%);
     box-shadow: 0 1px 0 rgba(26,22,18,0.1), 0 8px 20px rgba(26,22,18,0.08);
     z-index: 99999;
     isolation: isolate;
-  }
-  .menubar::before {
-    display: none;
   }
   .menubar-logo {
     margin-right: 12px;

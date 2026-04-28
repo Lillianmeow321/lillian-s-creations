@@ -1102,8 +1102,14 @@ body::before {
   font-size: 10px;
   letter-spacing: 0.5px;
   color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: center;
   text-align: right;
-  padding-top: 6px;
+  min-height: 100%;
+  padding-top: 0;
 }
 .proj-status .live,
 .proj-status .wip {
@@ -1115,22 +1121,34 @@ body::before {
 .proj-status .wip::before  { content: '◌ '; }
 
 .proj-arrow {
-  font-family: 'Songti SC', 'SimSun', 'STSong', serif;
-  font-size: 25px;
-  font-weight: 700;
-  color: var(--ink-soft);
-  margin-top: 10px;
-  letter-spacing: 0.02em;
-  text-transform: capitalize;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--olive);
+  margin-top: 0;
+  letter-spacing: 0;
+  text-transform: none;
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: flex-end;
   align-self: flex-end;
-  gap: 5px;
-  transition: gap 0.2s;
-  text-decoration: underline;
+  gap: 2px;
+  transition: transform 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  text-align: right;
+  line-height: 0.98;
 }
-.proj-item:hover .proj-arrow { gap: 10px; }
+.proj-item:hover .proj-arrow {
+  transform: translateX(2px);
+  color: #4d6037;
+}
+
+.proj-arrow-arrow {
+  display: block;
+  line-height: 0.9;
+}
 
 .proj-cta-btn {
   background: none;
@@ -1856,13 +1874,15 @@ footer {
     padding-top: 0;
   }
   .proj-arrow {
-    font-family: 'Songti SC', 'SimSun', 'STSong', serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.35;
-    text-transform: capitalize;
-    text-decoration: underline;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 0.98;
+    text-transform: none;
+    text-decoration: none;
+    white-space: nowrap;
+    text-align: right;
   }
   .exp-item { grid-template-columns: 1fr; gap: 8px; }
   .exp-columns { grid-template-columns: 1fr; gap: 40px; }
@@ -2217,7 +2237,7 @@ footer {
           <div class="proj-thumb"><img src="./Hound.jpeg" alt="Hound screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow">Live Visit →</a>
+            <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow" aria-label="Live Visit">Live<br>Visit <span class="proj-arrow-arrow" aria-hidden="true">→</span></a>
           </div>
         </div>
 
@@ -2237,7 +2257,7 @@ footer {
           <div class="proj-thumb"><img src="./Painpal.jpeg" alt="Painpal screenshot"></div>
           <div class="proj-status">
             <span class="wip">research</span>
-            <button type="button" class="proj-arrow proj-cta-btn" data-modal-trigger="painpalModal">Case Study →</button>
+            <button type="button" class="proj-arrow proj-cta-btn" data-modal-trigger="painpalModal" aria-label="Case Study">Case<br>Study <span class="proj-arrow-arrow" aria-hidden="true">→</span></button>
           </div>
         </div>
 
@@ -2257,7 +2277,7 @@ footer {
           <div class="proj-thumb"><img src="./doggy.jpeg" alt="狗狗夸夸机 screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="#" data-url-b64="aHR0cHM6Ly9kb2dnZXB1ZmYubG92YWJsZS5hcHAv" target="_blank" class="proj-arrow">Live Visit →</a>
+            <a href="#" data-url-b64="aHR0cHM6Ly9kb2dnZXB1ZmYubG92YWJsZS5hcHAv" target="_blank" class="proj-arrow" aria-label="Live Visit">Live<br>Visit <span class="proj-arrow-arrow" aria-hidden="true">→</span></a>
           </div>
         </div>
 
@@ -2278,7 +2298,7 @@ footer {
           <div class="proj-thumb"><img src="./univonest1.jpeg" alt="Univonest screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <button type="button" class="proj-arrow proj-cta-btn" data-modal-trigger="univonestModal">Live Visit →</button>
+            <button type="button" class="proj-arrow proj-cta-btn" data-modal-trigger="univonestModal" aria-label="Live Visit">Live<br>Visit <span class="proj-arrow-arrow" aria-hidden="true">→</span></button>
           </div>
         </div>
 
@@ -2299,7 +2319,7 @@ footer {
           <div class="proj-thumb"><img src="./Catty.jpeg" alt="巡礼咪 screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://www.coze.cn/store/agent/7631970252695715866?bot_id=true&bid=6jru6iufo601v" target="_blank" class="proj-arrow">Live Visit →</a>
+            <a href="https://www.coze.cn/store/agent/7631970252695715866?bot_id=true&bid=6jru6iufo601v" target="_blank" class="proj-arrow" aria-label="Live Visit">Live<br>Visit <span class="proj-arrow-arrow" aria-hidden="true">→</span></a>
           </div>
         </div>
 
@@ -2319,7 +2339,7 @@ footer {
           <div class="proj-thumb"><img src="./entropy.jpeg" alt="美学装置 screenshot"></div>
           <div class="proj-status">
             <span class="wip">2 pieces</span>
-            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open data-modal-trigger="aestheticModal"><span class="proj-arrow-text">Explore</span><span class="proj-arrow-mark">→</span></button>
+            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open data-modal-trigger="aestheticModal" aria-label="Try">Try <span class="proj-arrow-arrow" aria-hidden="true">→</span></button>
           </div>
         </div>
       </div>

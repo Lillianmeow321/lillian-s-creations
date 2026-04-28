@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>熵 · entropy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+SC:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0d0c;
+    --bg-2: #161513;
+    --ink: #e8e2d6;
+    --ink-soft: #8a847a;
+    --whisper: rgba(232, 226, 214, 0.25);
+    --rescue: #d4a574;
+    --decay: #5e3a3a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    cursor: default;
+  }
+
+  /* slow drifting backdrop — like dust */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -10%;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(60, 50, 40, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(40, 30, 25, 0.5) 0%, transparent 60%),
+      var(--bg);
+    z-index: -2;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.85 0 0 0 0 0.75 0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    pointer-events: none;
+    opacity: 0.6;
+    mix-blend-mode: screen;
+    z-index: -1;
+  }
+
+  /* —— hud —— */
+  .hud {
+    position: fixed;
+    top: 2.4rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2.8rem;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .hud .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    color: var(--ink-soft);
+    text-transform: lowercase;
+  }
+  .hud .title .zh {
+    font-family: 'Noto Serif SC', serif;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0.6em;
+    margin-right: 0.6em;
+  }
+
+  .rescue-meter {
+    text-align: right;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    transition: opacity 0.8s ease;
+  }
+  .rescue-meter .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .rescue-meter .count {
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 300;
+    margin-top: 0.1rem;
+    color: var(--rescue);
+    transition: color 0.6s ease, opacity 0.6s ease;
+  }
+  .rescue-meter.depleted .count { color: var(--decay); opacity: 0.6; }
+  .rescue-meter.depleted .label { opacity: 0.4; }
+
+  /* lang toggle */
+  .lang-toggle {
+    position: fixed;
+    top: 2.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    z-index: 6;
+    pointer-events: auto;
+  }
+  .lang-toggle button {
+    background: none;
+    border: none;
+    font: inherit;
+    color: var(--ink-soft);
+    opacity: 0.45;
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    transition: opacity 0.4s ease, color 0.4s ease;
+    letter-spacing: inherit;
+  }
+  .lang-toggle button:hover { opacity: 0.85; }
+  .lang-toggle button.active { opacity: 1; color: var(--ink); }
+  .lang-toggle .sep { opacity: 0.3; }
+
+  /* —— stage —— */
+  .stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 3rem;
+  }
+
+  .poem {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+    line-height: 2.4;
+    letter-spacing: 0.18em;
+    text-align: center;
+    max-width: 100%;
+    user-select: none;
+  }
+  .poem .line {
+    display: block;
+    margin-bottom: 0.6rem;
+    white-space: nowrap;
+  }
+  /* english lines are longer; allow them to wrap on small screens */
+  html[lang="en"] .poem .line { white-space: normal; }
+  html[lang="en"] .poem { letter-spacing: 0.02em; line-height: 2.2; }
+
+  /* the character cell */
+  .ch {
+    display: inline-block;
+    position: relative;
+    cursor: crosshair;
+    transition: color 0.6s ease, transform 0.4s ease, opacity 1.2s ease, text-shadow 0.6s ease;
+    will-change: transform, opacity;
+  }
+  .ch:hover { transform: translateY(-2px); }
+
+  /* word spacer for english (does not decay) */
+  .sp {
+    display: inline-block;
+    width: 0.4em;
+  }
+
+  /* health states — applied via classes */
+  .ch.s-healthy {
+    color: var(--ink);
+    text-shadow: 0 0 18px rgba(232, 226, 214, 0.15);
+  }
+  .ch.s-jitter {
+    color: rgba(232, 226, 214, 0.85);
+    animation: jitter 0.18s steps(2) infinite;
+  }
+  .ch.s-glitch {
+    color: rgba(180, 160, 140, 0.7);
+  }
+  .ch.s-fading {
+    color: rgba(180, 160, 140, 0.35);
+    filter: blur(0.6px);
+  }
+  .ch.s-gone {
+    color: transparent;
+  }
+
+  /* rescue flash — the one moment of light */
+  .ch.rescued {
+    animation: rescueFlash 1.4s ease-out;
+  }
+  @keyframes rescueFlash {
+    0%   { color: var(--rescue); text-shadow: 0 0 24px rgba(212, 165, 116, 0.9), 0 0 48px rgba(212, 165, 116, 0.4); transform: scale(1.08); }
+    50%  { color: var(--rescue); text-shadow: 0 0 12px rgba(212, 165, 116, 0.5); }
+    100% { color: var(--ink); text-shadow: 0 0 18px rgba(232, 226, 214, 0.15); transform: scale(1); }
+  }
+
+  @keyframes jitter {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(0.8px, -0.4px); }
+    50%  { transform: translate(-0.4px, 0.8px); }
+    75%  { transform: translate(0.6px, 0.2px); }
+    100% { transform: translate(-0.2px, -0.6px); }
+  }
+
+  .ch.s-jitter:hover { animation: none; transform: translateY(-2px); }
+
+  /* attribution */
+  .attribution {
+    position: fixed;
+    bottom: 2.8rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--whisper);
+    letter-spacing: 0.15em;
+    pointer-events: none;
+  }
+  .attribution .zh {
+    font-family: 'Noto Serif SC', serif;
+    font-style: normal;
+    font-weight: 200;
+    letter-spacing: 0.3em;
+    margin-right: 0.6em;
+  }
+
+  /* end-state caption — when rescues run out, this rises and dominates
+     the screen center, then itself begins to decay */
+  .epitaph {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%) translateY(20px) scale(0.97);
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 3.4rem;
+    color: var(--decay);
+    letter-spacing: 0.18em;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 3s ease, transform 4s cubic-bezier(0.2, 0, 0.2, 1), color 6s ease;
+    text-shadow:
+      0 0 30px rgba(150, 50, 50, 0.55),
+      0 0 60px rgba(120, 40, 40, 0.4),
+      0 0 100px rgba(94, 58, 58, 0.3);
+    z-index: 4;
+    white-space: nowrap;
+    padding: 0 1rem;
+    overflow: visible;
+  }
+  .epitaph.show {
+    opacity: 1;
+    transform: translateY(-50%) translateY(0) scale(1);
+  }
+  /* zh and en lines now sit inline as one phrase */
+  .epitaph .zh,
+  .epitaph .en {
+    display: inline;
+    font-size: 1em;
+  }
+  .epitaph .zh {
+    font-family: 'Noto Serif SC', serif;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    margin-right: 0.4em;
+  }
+  .epitaph .en {
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    opacity: 0.92;
+  }
+  /* the epitaph itself decays — characters become individually controllable */
+  .epitaph .ec {
+    display: inline-block;
+    transition: color 1.5s ease, opacity 2s ease, filter 2s ease, transform 1s ease;
+  }
+  .epitaph .sp {
+    display: inline-block;
+    width: 0.4em;
+  }
+  .epitaph .ec.fade {
+    color: rgba(94, 58, 58, 0.3);
+    filter: blur(0.4px);
+  }
+  .epitaph .ec.gone {
+    opacity: 0;
+  }
+
+  /* when epitaph dominates, dim everything else slightly so it's the focus */
+  body.endgame .poem { opacity: 0.35; transition: opacity 6s ease; }
+  body.endgame .hud  { opacity: 0.35; transition: opacity 6s ease; }
+  body.endgame .attribution { opacity: 0.35; transition: opacity 6s ease; }
+
+  @media (max-width: 900px) {
+    .epitaph { font-size: 2rem; white-space: normal; }
+  }
+
+  /* opening veil */
+  .veil {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: pointer;
+    transition: opacity 1.6s ease;
+    text-align: center;
+    padding: 2rem;
+  }
+  .veil.gone { opacity: 0; pointer-events: none; }
+  .veil .glyph {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 200;
+    font-size: 5rem;
+    color: var(--ink);
+    letter-spacing: 0;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 30px rgba(232, 226, 214, 0.2);
+  }
+  .veil .en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.5em;
+    text-transform: lowercase;
+    margin-bottom: 4rem;
+  }
+  .veil .instruction {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 2;
+    max-width: 30rem;
+  }
+  .veil .instruction em {
+    color: var(--rescue);
+    font-style: normal;
+    font-weight: 400;
+  }
+  .veil .begin {
+    margin-top: 3.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink);
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.9; }
+  }
+
+  @media (max-width: 720px) {
+    .hud { padding: 0 1.4rem; top: 1.5rem; }
+    .stage { padding: 4rem 1rem; }
+    .poem { font-size: 1.2rem; line-height: 2.2; letter-spacing: 0.12em; }
+    .veil .glyph { font-size: 3.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="veil" id="veil">
+  <div class="glyph">熵</div>
+  <div class="en">entropy</div>
+  <div class="instruction">
+    眼前一切，都将随时间崩坏。<br>
+    点击任何一个字，可以将它<em>暂时挽回</em>。<br>
+    <span style="color: var(--whisper); font-size: 0.85em;">但你的拯救是有限的。</span>
+  </div>
+  <div class="begin">begin</div>
+</div>
+
+<div class="hud">
+  <div class="title"><span class="zh">熵</span>entropy</div>
+  <div class="rescue-meter" id="meter">
+    <div class="label">rescues remaining</div>
+    <div class="count" id="meterCount">15</div>
+  </div>
+</div>
+
+<div class="lang-toggle" id="langToggle">
+  <button data-lang="zh" class="active">中</button>
+  <span class="sep">·</span>
+  <button data-lang="en">EN</button>
+</div>
+
+<div class="stage">
+  <div class="poem" id="poem"></div>
+</div>
+
+<div class="epitaph" id="epitaph">
+  <span class="zh" id="epitaphZh"></span>
+  <span class="en" id="epitaphEn"></span>
+</div>
+
+<div class="attribution" id="attribution">
+  <span class="zh">屈原 · 离骚</span>after Qu Yuan
+</div>
+
+<script>
+  // —— the poems ——
+  // ZH: four lines from Qu Yuan's Li Sao, the same passage Lu Xun used as
+  // the epigraph for his collection 《彷徨》. searching even when the road
+  // is endless and night is falling.
+  //
+  // EN: stanzas from Dylan Thomas's "Do Not Go Gentle Into That Good Night"
+  // (1947). raging against the dying of the light. a different face of
+  // the same impulse — to resist what cannot be resisted.
+
+  const POEMS = {
+    zh: {
+      lines: [
+        '路漫漫其修远兮，吾将上下而求索。',
+        '朝发轫于苍梧兮，夕余至乎县圃。',
+        '欲少留此灵琐兮，日忽忽其将暮。',
+        '吾令羲和弭节兮，望崦嵫而勿迫。'
+      ],
+      attribution: '<span class="zh">屈原 · 离骚</span>after Qu Yuan',
+      epitaphLine: '已无可挽回'
+    },
+    en: {
+      lines: [
+        'Do not go gentle into that good night,',
+        'Old age should burn and rave at close of day;',
+        'Rage, rage against the dying of the light.',
+        '',
+        'Though wise men at their end know dark is right,',
+        'Because their words had forked no lightning they',
+        'Do not go gentle into that good night.'
+      ],
+      attribution: 'after Dylan Thomas <span class="zh" style="margin-left:0.6em;">1947</span>',
+      epitaphLine: 'nothing more can be saved'
+    }
+  };
+
+  // glyphs used to corrupt characters — different sets for zh and en so
+  // each language decays into something that looks like its own ruin.
+  const GLYPHS_ZH = '丶丿乀乁亅冂凵厂匚匸卩厶口囗夂夊宀寸尢尸屮巛幺廴廾弋彐彡彳忄扌攵旡曰歹殳氵灬爫疒癶罒罓⺮⺻⺼丨丶亠';
+  const FRAGMENTS_ZH = '一丶丨丿乙亅二亠';
+
+  // for english: similar-looking glyphs, broken letterforms, IPA marks
+  const GLYPHS_EN = 'ɐɔəɟɥɯɹʇʌʍʎʔʕʢʡǁǂǃˈˌːˑʼʻ¬†‡§¶•·';
+  const FRAGMENTS_EN = '·.,\'`-—|';
+
+  const stageEl = document.getElementById('poem');
+  const meterEl = document.getElementById('meter');
+  const meterCount = document.getElementById('meterCount');
+  const veil = document.getElementById('veil');
+  const epitaph = document.getElementById('epitaph');
+  const attributionEl = document.getElementById('attribution');
+  const langToggle = document.getElementById('langToggle');
+
+  let cells = [];
+  let started = false;
+  let rescues = 15;
+  let depleted = false;
+  let currentLang = 'zh';
+  let depleteTimers = []; // so we can cancel pending epitaph timeouts on lang switch
+
+  function getGlyphs() { return currentLang === 'zh' ? GLYPHS_ZH : GLYPHS_EN; }
+  function getFragments() { return currentLang === 'zh' ? FRAGMENTS_ZH : FRAGMENTS_EN; }
+
+  // build the poem for the active language
+  function buildPoem() {
+    stageEl.innerHTML = '';
+    cells = [];
+    const poem = POEMS[currentLang];
+
+    poem.lines.forEach(line => {
+      const lineEl = document.createElement('span');
+      lineEl.className = 'line';
+      if (line === '') {
+        // blank stanza break
+        lineEl.innerHTML = '&nbsp;';
+        stageEl.appendChild(lineEl);
+        return;
+      }
+      [...line].forEach(ch => {
+        // spaces: render as a non-decaying spacer with real width so
+        // english words stay separated. don't add to cells (won't decay).
+        if (ch === ' ') {
+          const sp = document.createElement('span');
+          sp.className = 'sp';
+          sp.innerHTML = '&nbsp;';
+          lineEl.appendChild(sp);
+          return;
+        }
+        const span = document.createElement('span');
+        span.className = 'ch s-healthy';
+        span.textContent = ch;
+        // punctuation set for both languages (no \s — handled above)
+        const isPunct = /[，。；：、！？""''…—,.;:!?'"\-]/.test(ch);
+        span.dataset.original = ch;
+        span.dataset.isPunct = isPunct ? '1' : '0';
+        span.dataset.health = '1';
+        span.dataset.rate = (0.0006 + Math.random() * 0.0010).toString();
+        span.dataset.phase = (Math.random() * 1000).toString();
+
+        if (!isPunct) {
+          span.addEventListener('click', () => rescue(span));
+        }
+        lineEl.appendChild(span);
+        cells.push(span);
+      });
+      stageEl.appendChild(lineEl);
+    });
+
+    attributionEl.innerHTML = poem.attribution;
+  }
+
+  function applyState(cell) {
+    const h = parseFloat(cell.dataset.health);
+    const original = cell.dataset.original;
+    const isPunct = cell.dataset.isPunct === '1';
+    const glyphs = getGlyphs();
+    const fragments = getFragments();
+
+    cell.classList.remove('s-healthy', 's-jitter', 's-glitch', 's-fading', 's-gone');
+
+    if (h >= 0.85) {
+      cell.classList.add('s-healthy');
+      cell.textContent = original;
+    } else if (h >= 0.6) {
+      cell.classList.add('s-jitter');
+      cell.textContent = original;
+    } else if (h >= 0.35) {
+      cell.classList.add('s-glitch');
+      if (!isPunct && Math.random() < 0.4) {
+        cell.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      } else {
+        cell.textContent = original;
+      }
+    } else if (h >= 0.1) {
+      cell.classList.add('s-fading');
+      if (!isPunct && Math.random() < 0.7) {
+        cell.textContent = fragments[Math.floor(Math.random() * fragments.length)];
+      } else {
+        cell.textContent = original;
+      }
+    } else {
+      cell.classList.add('s-gone');
+      cell.textContent = original;
+    }
+  }
+
+  function rescue(cell) {
+    if (depleted) return;
+    if (parseFloat(cell.dataset.health) >= 0.99) return;
+    if (rescues <= 0) return;
+
+    rescues--;
+    cell.dataset.health = '1';
+    cell.classList.remove('s-jitter', 's-glitch', 's-fading', 's-gone');
+    cell.classList.add('s-healthy', 'rescued');
+    cell.textContent = cell.dataset.original;
+    setTimeout(() => cell.classList.remove('rescued'), 1400);
+
+    meterCount.textContent = rescues;
+    if (rescues === 0) onDepleted();
+  }
+
+  function buildEpitaph() {
+    const poem = POEMS[currentLang];
+    const zhEl = document.getElementById('epitaphZh');
+    const enEl = document.getElementById('epitaphEn');
+    zhEl.innerHTML = '';
+    enEl.innerHTML = ''; // not used anymore but keep clear
+
+    // styling differs per language
+    if (currentLang === 'zh') {
+      zhEl.style.fontFamily = "'Noto Serif SC', serif";
+      zhEl.style.fontStyle = 'normal';
+      zhEl.style.letterSpacing = '0.4em';
+    } else {
+      zhEl.style.fontFamily = "'Cormorant Garamond', serif";
+      zhEl.style.fontStyle = 'italic';
+      zhEl.style.letterSpacing = '0.18em';
+    }
+
+    [...poem.epitaphLine].forEach(ch => {
+      if (ch === ' ') {
+        const sp = document.createElement('span');
+        sp.className = 'sp';
+        sp.innerHTML = '&nbsp;';
+        zhEl.appendChild(sp);
+        return;
+      }
+      const s = document.createElement('span');
+      s.className = 'ec';
+      s.textContent = ch;
+      zhEl.appendChild(s);
+    });
+  }
+
+  function decayEpitaph() {
+    const all = Array.from(document.querySelectorAll('.epitaph .ec'));
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
+    }
+    all.forEach((el, idx) => {
+      depleteTimers.push(setTimeout(() => el.classList.add('fade'), 18000 + idx * 600));
+    });
+    all.forEach((el, idx) => {
+      depleteTimers.push(setTimeout(() => el.classList.add('gone'), 55000 + idx * 900));
+    });
+  }
+
+  function onDepleted() {
+    depleted = true;
+    meterEl.classList.add('depleted');
+    document.body.classList.add('endgame');
+    // a small but meaningful change: decay slightly accelerates, like
+    // the world noticing you've stopped resisting.
+    cells.forEach(c => {
+      const r = parseFloat(c.dataset.rate);
+      c.dataset.rate = (r * 1.4).toString();
+    });
+    // note: epitaph is NOT triggered here. it triggers only when the poem
+    // has fully collapsed — see checkCollapse() in the main loop.
+  }
+
+  // tracks whether the entire poem has reached health 0
+  let collapseTriggered = false;
+  let collapseTime = 0;
+
+  function checkCollapse(dt) {
+    if (collapseTriggered || cells.length === 0) return;
+    // every cell must be at zero (or close enough)
+    const allDead = cells.every(c => parseFloat(c.dataset.health) <= 0.01);
+    if (!allDead) {
+      collapseTime = 0;
+      return;
+    }
+    // accumulate post-collapse time and fire after 1.5s
+    collapseTime += dt;
+    if (collapseTime >= 1500) {
+      collapseTriggered = true;
+      // make sure we're in endgame visuals (in case rescues were never used)
+      document.body.classList.add('endgame');
+      buildEpitaph();
+      requestAnimationFrame(() => epitaph.classList.add('show'));
+      decayEpitaph();
+    }
+  }
+
+  // —— language switching ——
+  // mid-experience swaps shouldn't reset rescues; the meditation continues.
+  // but we must rebuild the poem and clear the epitaph state if it was showing.
+  function switchLang(lang) {
+    if (lang === currentLang) return;
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    langToggle.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+
+    // clear pending epitaph timers
+    depleteTimers.forEach(t => clearTimeout(t));
+    depleteTimers = [];
+
+    // hide epitaph & remove endgame dim if showing — the new poem
+    // gets to start its own collapse from scratch.
+    epitaph.classList.remove('show');
+    document.body.classList.remove('endgame');
+    collapseTriggered = false;
+    collapseTime = 0;
+
+    // rebuild poem in the new language
+    buildPoem();
+
+    // if we were already depleted on the previous language, the new poem
+    // also gets the dim treatment immediately and accelerated decay.
+    if (depleted) {
+      document.body.classList.add('endgame');
+      cells.forEach(c => {
+        const r = parseFloat(c.dataset.rate);
+        c.dataset.rate = (r * 1.4).toString();
+      });
+    }
+  }
+
+  langToggle.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => switchLang(b.dataset.lang));
+  });
+
+  // —— main loop ——
+  let lastT = performance.now();
+  let visualTick = 0;
+  function loop(now) {
+    const dt = now - lastT;
+    lastT = now;
+
+    cells.forEach(cell => {
+      let h = parseFloat(cell.dataset.health);
+      const r = parseFloat(cell.dataset.rate);
+      h -= r * dt * 0.06;
+      if (h < 0) h = 0;
+      cell.dataset.health = h.toString();
+    });
+
+    visualTick += dt;
+    if (visualTick > 180) {
+      visualTick = 0;
+      cells.forEach(applyState);
+    }
+
+    checkCollapse(dt);
+
+    requestAnimationFrame(loop);
+  }
+
+  function begin() {
+    if (started) return;
+    started = true;
+    veil.classList.add('gone');
+    setTimeout(() => {
+      buildPoem();
+      requestAnimationFrame(t => { lastT = t; loop(t); });
+    }, 800);
+  }
+
+  veil.addEventListener('click', begin);
+  document.addEventListener('keydown', (e) => {
+    if (!started && (e.key === ' ' || e.key === 'Enter')) begin();
+  });
+</script>
+</body>
+</html>

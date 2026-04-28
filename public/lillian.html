@@ -491,29 +491,21 @@ body::before {
 
 /* ─────────── TYPEWRITER EFFECT ─────────── */
 .typewriter {
-  visibility: hidden;
-}
-.typewriter.tw-active {
   visibility: visible;
 }
-.typewriter.tw-active .tw-char {
-  opacity: 0;
-  animation: twAppear 0.01s linear forwards;
+.typewriter .tw-char {
+  display: none;
 }
-@keyframes twAppear {
-  to { opacity: 1; }
+.typewriter .tw-char.tw-visible {
+  display: inline;
 }
-.typewriter.tw-active::after {
-  content: '▍';
+.tw-cursor {
   display: inline-block;
   color: var(--olive);
   margin-left: 1px;
   animation: twBlink 0.85s steps(2) infinite;
   font-weight: normal;
   vertical-align: -1px;
-}
-.typewriter.tw-done::after {
-  display: none;
 }
 @keyframes twBlink {
   0%, 50% { opacity: 1; }
@@ -567,9 +559,10 @@ body::before {
 /* ─────────── DOCK (bottom) ─────────── */
 .dock {
   position: fixed;
-  bottom: 16px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  bottom: auto;
+  transform: translate(-50%, -50%);
   z-index: 150;
   background: rgba(239, 234, 226, 0.55);
   backdrop-filter: blur(24px) saturate(150%);
@@ -630,7 +623,7 @@ body::before {
 .dock-writing { background: linear-gradient(135deg, #fff, #e8e4dc); }
 .dock-life { background: linear-gradient(135deg, #f3d6e5, #f4c2dc); }
 .dock-podcast { background: linear-gradient(135deg, var(--olive), #3d4a2b); color: #efeae2; }
-.dock-resume { background: linear-gradient(135deg, #fff, #f3eee5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; }
+.dock-resume { background: linear-gradient(135deg, #fff, #f3eee5); font-family: 'Cormorant Garamond', serif; font-style: normal; font-weight: 600; }
 .dock-mail { background: linear-gradient(135deg, #b8d6e8, #8eb8d4); }
 .dock-img {
   background: transparent !important;
@@ -753,8 +746,8 @@ body::before {
 }
 
 .about-title em {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: inherit;
+  font-style: normal;
   color: var(--olive);
 }
 
@@ -771,39 +764,29 @@ body::before {
   font-weight: 500;
 }
 
+.about-body em {
+  font-style: normal;
+}
+
 .about-portrait {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  aspect-ratio: 4/5;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  aspect-ratio: auto;
   position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: rgba(26,22,18,0.35);
-  letter-spacing: 1px;
-  text-align: center;
+  overflow: visible;
+  box-shadow: none;
+  display: block;
 }
 
 .about-portrait::after {
-  content: '';
-  position: absolute;
-  top: 14px; left: 14px;
-  width: 56px;
-  height: 18px;
-  background: rgba(244,114,182,0.15);
-  border: 1px solid rgba(244,114,182,0.4);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--pink);
-  letter-spacing: 1px;
+  display: none;
+}
+
+.about-portrait img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .meta-table {
@@ -833,10 +816,11 @@ body::before {
 .meta-val {
   font-size: 14px;
   color: var(--ink);
+  line-height: 1.7;
 }
 .meta-val em {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: inherit;
+  font-style: normal;
   color: var(--ink-soft);
   font-size: 13px;
   margin-left: 6px;
@@ -861,7 +845,7 @@ body::before {
 }
 .projects-title em {
   font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-style: normal;
   color: var(--olive);
 }
 
@@ -882,12 +866,16 @@ body::before {
   padding: 32px 0;
   border-bottom: 1px solid var(--border);
   align-items: start;
-  cursor: pointer;
+  cursor: default;
   transition: background 0.25s, padding 0.25s;
   margin: 0 -24px;
   padding-left: 24px;
   padding-right: 24px;
   border-radius: 4px;
+}
+
+.proj-item[data-href] {
+  cursor: pointer;
 }
 
 .proj-item:hover {
@@ -913,8 +901,8 @@ body::before {
   line-height: 1;
 }
 .proj-name em {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: inherit;
+  font-style: normal;
   color: var(--olive);
 }
 
@@ -944,11 +932,31 @@ body::before {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   padding: 3px 9px;
-  background: rgba(26,22,18,0.05);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  color: var(--ink-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--ink);
   letter-spacing: 0.3px;
+}
+
+.proj-tag:nth-child(4n + 1) {
+  background: #87927a;
+  border-color: #7c8770;
+  color: #f6f2eb;
+}
+
+.proj-tag:nth-child(4n + 2) {
+  background: #b6c1aa;
+  border-color: #a9b69b;
+}
+
+.proj-tag:nth-child(4n + 3) {
+  background: #d9d0a8;
+  border-color: #ccc296;
+}
+
+.proj-tag:nth-child(4n + 4) {
+  background: #afc0c7;
+  border-color: #a1b3bb;
 }
 
 .proj-thumb {
@@ -992,7 +1000,7 @@ body::before {
 
 .proj-arrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 22px;
   color: var(--ink-soft);
   margin-top: 10px;
   letter-spacing: 0.5px;
@@ -1003,6 +1011,108 @@ body::before {
 }
 .proj-item:hover .proj-arrow { gap: 10px; }
 
+.proj-cta-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.aesthetic-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1200;
+}
+
+.aesthetic-modal.is-open {
+  display: flex;
+}
+
+.aesthetic-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 22, 18, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.aesthetic-modal-panel {
+  position: relative;
+  width: min(560px, 100%);
+  background: rgba(239, 234, 226, 0.96);
+  border: 1px solid rgba(26, 22, 18, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.14);
+  overflow: hidden;
+}
+
+.aesthetic-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.aesthetic-modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  letter-spacing: -0.5px;
+}
+
+.aesthetic-modal-close {
+  background: none;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.aesthetic-modal-body {
+  padding: 20px 22px 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.aesthetic-option {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.42);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.aesthetic-option:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(26,22,18,0.2);
+}
+
+.aesthetic-option-name {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.aesthetic-option-desc {
+  display: block;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
 /* ─────────── EXPERIENCE ─────────── */
 .exp-list {
   display: flex;
@@ -1011,8 +1121,8 @@ body::before {
 
 .exp-item {
   display: grid;
-  grid-template-columns: 130px 1fr 140px;
-  gap: 40px;
+  grid-template-columns: 1fr;
+  gap: 10px;
   padding: 28px 0;
   border-bottom: 1px solid var(--border);
   align-items: start;
@@ -1024,40 +1134,26 @@ body::before {
   font-size: 11px;
   color: var(--ink-soft);
   letter-spacing: 0.8px;
-  padding-top: 4px;
 }
 
-.exp-role {
+.exp-company {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 500;
-  font-size: 22px;
-  letter-spacing: -0.3px;
-  margin-bottom: 4px;
+  font-size: 32px;
+  letter-spacing: -0.6px;
   line-height: 1.2;
 }
 
-.exp-co {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 14px;
+.exp-role {
+  font-size: 18px;
   color: var(--olive);
-  margin-bottom: 12px;
 }
 
-.exp-body {
-  font-size: 13.5px;
+.exp-desc {
+  font-size: 15px;
   color: var(--ink-soft);
   line-height: 1.75;
-  max-width: 580px;
-}
-
-.exp-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  color: var(--ink-soft);
-  text-align: right;
-  padding-top: 4px;
+  max-width: 620px;
 }
 
 /* ─────────── PODCAST CTA ─────────── */
@@ -1079,7 +1175,7 @@ body::before {
 
 .podcast-name {
   font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-style: normal;
   font-weight: 500;
   font-size: clamp(40px, 5vw, 72px);
   letter-spacing: -1.5px;
@@ -1090,7 +1186,7 @@ body::before {
 .podcast-sub {
   font-family: 'Cormorant Garamond', serif;
   font-size: 17px;
-  font-style: italic;
+  font-style: normal;
   color: rgba(239,234,226,0.7);
   max-width: 480px;
   line-height: 1.6;
@@ -1414,7 +1510,7 @@ footer {
           <h2 class="about-title">
             金融的视角，<br>
             产品的双手，<br>
-            <em>代码的节奏。</em>
+            代码的节奏。
           </h2>
           <p class="about-body typewriter" data-tw-delay="0">
             我是 Lillian —— 生于 2004 年，Cornell Tech 研一学生，<strong>builder</strong>，闲暇时录<strong>播客</strong>。对市场、AI，以及一切「如何运作」的事物，都怀有强烈的好奇。
@@ -1426,19 +1522,17 @@ footer {
             来 Cornell Tech 之前，我在中国人民大学取得理学与经济学双学士学位，主修数据科学与应用经济。同时，我花了大量时间打辩论，并在 2022–2023 学年担任人大辩论队队长。
           </p>
           <p class="about-body typewriter" data-tw-delay="4500">
-            对我而言，最有魅力的地方，始终在<em>两种事物的交汇处</em>。
+            对我而言，最有魅力的地方，始终在两种事物的交汇处。
           </p>
         </div>
         <div>
-          <div class="about-portrait">your.jpg</div>
+          <div class="about-portrait">
+            <img src="/your.png" alt="Lillian Li portrait">
+          </div>
           <div class="meta-table">
             <div class="meta-row">
               <span class="meta-key">edu</span>
-              <span class="meta-val">Cornell Tech &amp; Technion<em>信息系统工程双硕士 · '27</em></span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-key">prev</span>
-              <span class="meta-val">中国人民大学<em>数据科学 &amp; 应用经济 · 双学士</em></span>
+              <span class="meta-val">信息系统工程 @ Cornell Tech<br>数据科学与经济学 @ 中国人民大学</span>
             </div>
             <div class="meta-row">
               <span class="meta-key">focus</span>
@@ -1446,11 +1540,11 @@ footer {
             </div>
             <div class="meta-row">
               <span class="meta-key">based</span>
-              <span class="meta-val">New York<em>was Beijing · Berkeley</em></span>
+              <span class="meta-val">纽约、北京</span>
             </div>
             <div class="meta-row">
               <span class="meta-key">born</span>
-              <span class="meta-val">2004</span>
+              <span class="meta-val">2004年</span>
             </div>
           </div>
         </div>
@@ -1475,11 +1569,10 @@ footer {
 
       <div class="proj-list">
         <!-- Hound -->
-        <div class="proj-item">
+        <div class="proj-item" data-href="https://hound-mu.vercel.app/">
           <div class="proj-num">/001</div>
           <div class="proj-content">
-            <h3 class="proj-name">Hound<em>：边牧分析师.</em></h3>
-            <p class="proj-tagline">"the border collie that fetches your research"</p>
+            <h3 class="proj-name">Hound：边牧分析师</h3>
             <p class="proj-desc">从 0 到 1 搭了一套多 Agent 投研助手。四个 Agent 分工协作：规划、检索、分析、审核，生成最符合投资人和咨询师语言习惯的投研报告与市场规模测算。知识库来自脱敏后的一线投研经验。<br><br>为了让小边牧快跑：5 个维度检索并行，端到端延迟从 60s 压到 25s。多轮对话里，我设计了意图识别（新报告 / 追问 / 修改）+ 参数继承，用户不必重复自己。<br><br>RAG 链路折腾了几轮——从 chromadb 迁到 Qdrant、本地 BGE 迁到 Jina API，就为了躲开 2GB 的 torch 依赖、让云端构建不超时。针对大模型输出不稳定，我加了审核 Agent 做质量打分 + 自动重试 + 向用户提出潜在加分点。</p>
             <div class="proj-tags">
               <span class="proj-tag">Qdrant</span>
@@ -1493,7 +1586,7 @@ footer {
           <div class="proj-thumb">hound.png</div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow">visit →</a>
+            <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow">Live Visit →</a>
           </div>
         </div>
 
@@ -1501,8 +1594,7 @@ footer {
         <div class="proj-item">
           <div class="proj-num">/002</div>
           <div class="proj-content">
-            <h3 class="proj-name">Painpal<em>.</em></h3>
-            <p class="proj-tagline">"UX research × UI design for multimodal pain tracking"</p>
+            <h3 class="proj-name">Painpal</h3>
             <p class="proj-desc">为多模态疼痛追踪应用设计了完整的定性研究流程。深度访谈 Adapt Community Network 的专业人员与临床医生，围绕三个问题：临床工作流是什么样的？疼痛记录的真实障碍在哪里？幻肢痛的实操治疗方法是什么？<br><br>把答案翻译成技术需求规格：多模态疼痛输入（文字 / 语音 / 图像）、色盲友好 UI 标准、CBT 集成交互框架，并完成 UI 设计。</p>
             <div class="proj-tags">
               <span class="proj-tag">Figma</span>
@@ -1519,11 +1611,10 @@ footer {
         </div>
 
         <!-- 狗狗夸夸机 -->
-        <div class="proj-item">
+        <div class="proj-item" data-href="https://doggepuff.lovable.app/">
           <div class="proj-num">/003</div>
           <div class="proj-content">
-            <h3 class="proj-name">狗狗夸夸机<em>.</em></h3>
-            <p class="proj-tagline">"nine dogs, nine personalities, one good boy you"</p>
+            <h3 class="proj-name">狗狗夸夸机</h3>
             <p class="proj-desc">Prompt 层的轻量多 Agent 实验。9 套 Prompt 模板对应 9 种狗狗性格。我把性格拆成四维属性：语言风格、情绪基调、句式偏好、表情符号——显式注入 system prompt，再用 few-shot 锚定。<br><br>最好玩的是 5% 概率触发的"评审团模式"：狗狗们会七嘴八舌评价你，显式约束每只狗的关注焦点和禁用词，防止它们当学人精。犬种头像全部是纯 SVG 手绘，不依赖任何外部图片。</p>
             <div class="proj-tags">
               <span class="proj-tag">SVG</span>
@@ -1535,16 +1626,15 @@ footer {
           <div class="proj-thumb">dogge.png</div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://doggepuff.lovable.app/" target="_blank" class="proj-arrow">visit →</a>
+            <a href="https://doggepuff.lovable.app/" target="_blank" class="proj-arrow">Live Visit →</a>
           </div>
         </div>
 
         <!-- Univonest -->
-        <div class="proj-item">
+        <div class="proj-item" data-href="https://univonest-web.vercel.app">
           <div class="proj-num">/004</div>
           <div class="proj-content">
-            <h3 class="proj-name">Univonest<em>.</em></h3>
-            <p class="proj-tagline">"where international students sell their ikea"</p>
+            <h3 class="proj-name">Univonest</h3>
             <p class="proj-desc">留学生 P2P 二手交易平台，担任联合创始人，负责产品与法务。先做了 20+ 用户访谈和情境调查，验证核心假设——真正痛点是信任机制、跨境支付、物品核验。<br><br>跑了多场 Hackathon 与创业路演。然后从 0 到 1 搞定网站和小程序上线：用户流程梳理、原型设计、可用性测试，全包。还独立调研了美国实体注册、小程序备案、跨境合规要求等法务判断。</p>
             <div class="proj-tags">
               <span class="proj-tag">Co-founder</span>
@@ -1557,16 +1647,15 @@ footer {
           <div class="proj-thumb">univonest.png</div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://univonest-web.vercel.app" target="_blank" class="proj-arrow">visit →</a>
+            <a href="https://univonest-web.vercel.app" target="_blank" class="proj-arrow">Live Visit →</a>
           </div>
         </div>
 
         <!-- 巡礼咪 -->
-        <div class="proj-item">
+        <div class="proj-item" data-href="https://www.coze.cn/store/agent/7631970252695715866?bot_id=true&bid=6jru6iufo601v">
           <div class="proj-num">/005</div>
           <div class="proj-content">
-            <h3 class="proj-name">巡礼咪<em>.</em></h3>
-            <p class="proj-tagline">"if your favorite anime had a travel agent"</p>
+            <h3 class="proj-name">巡礼咪</h3>
             <p class="proj-desc">基于 Coze 搭建的圣地巡礼规划 Agent，用自定义 Skill 串联私有知识库检索 + 天气 / 酒店 / 交通 API，配合多轮对话的参数继承、超长截断与降级策略——纯 Agent 工作流。<br><br>核心资产是自己积累的 10+ 日本巡礼地的情感化知识库，让输出真的像动漫迷写的、有温度、不机械。</p>
             <div class="proj-tags">
               <span class="proj-tag">Coze</span>
@@ -1579,7 +1668,7 @@ footer {
           <div class="proj-thumb">junlimi.png</div>
           <div class="proj-status">
             <span class="live">live</span>
-            <div class="proj-arrow">view →</div>
+            <a href="https://www.coze.cn/store/agent/7631970252695715866?bot_id=true&bid=6jru6iufo601v" target="_blank" class="proj-arrow">Live Visit →</a>
           </div>
         </div>
 
@@ -1587,9 +1676,8 @@ footer {
         <div class="proj-item">
           <div class="proj-num">/006</div>
           <div class="proj-content">
-            <h3 class="proj-name">美学装置<em> · aesthetic devices.</em></h3>
-            <p class="proj-tagline">"three small things that aren't useful, but feel like something"</p>
-            <p class="proj-desc"><strong>呼吸 ——</strong> 一个 4 秒吸 / 4 秒呼的冥想装置，用 cubic-bezier 模拟呼吸顶端的停顿感，加上手写 Web Audio 合成的钟声与卷积混响。<br><br><strong>一生中有多少个星期天 ——</strong> 输入出生日期，就能看到"一生中已经度过几个星期天，还剩几个"的可视化图表，采取黑白讣告的美学。灵感来自我最近两年每天都在感叹的：「时间不够用啊！」<br><br><strong>熵 ——</strong> 字随时间崩塌腐烂，点击可拯救。我想传达的是人从"神话时代"走出后的茫然感：面对不断失序的现实，想要挽回却只如掬水在手，水从指尖流下。</p>
+            <h3 class="proj-name">美学装置</h3>
+            <p class="proj-desc"><strong>呼吸 ——</strong> 一个 4 秒吸，4 秒呼的冥想装置，来源于我的恐慌发作经历。这个粉色的小光点旨在帮助在恐慌发作、精神不定、因为情绪而呼吸难以平复时，帮助你慢慢地、一下一下的、回归均匀呼吸。<br><br><strong>熵 ——</strong> 字随时间崩塌腐烂，点击可拯救。我想传达的是人从"神话时代"走出后的茫然感：面对不断失序的现实，想要挽回却只如掬水在手，水从指尖流下。</p>
             <div class="proj-tags">
               <span class="proj-tag">Web Audio</span>
               <span class="proj-tag">CSS Art</span>
@@ -1600,13 +1688,33 @@ footer {
           <div class="proj-thumb">aesthetic.png</div>
           <div class="proj-status">
             <span class="wip">3 pieces</span>
-            <div class="proj-arrow">explore →</div>
+            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open>explore →</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<div class="aesthetic-modal" id="aestheticModal" aria-hidden="true">
+  <div class="aesthetic-modal-backdrop" data-aesthetic-close></div>
+  <div class="aesthetic-modal-panel" role="dialog" aria-modal="true" aria-labelledby="aestheticModalTitle">
+    <div class="aesthetic-modal-head">
+      <div class="aesthetic-modal-title" id="aestheticModalTitle">美学装置</div>
+      <button type="button" class="aesthetic-modal-close" data-aesthetic-close>close</button>
+    </div>
+    <div class="aesthetic-modal-body">
+      <a href="breath.html" class="aesthetic-option">
+        <span class="aesthetic-option-name">呼吸</span>
+        <span class="aesthetic-option-desc">一个 4 秒吸，4 秒呼的冥想装置。点进去后，你会进入那个粉色小光点的呼吸节奏。</span>
+      </a>
+      <a href="entropy.html" class="aesthetic-option">
+        <span class="aesthetic-option-name">熵</span>
+        <span class="aesthetic-option-desc">字会慢慢崩塌腐烂，点击可拯救。点进去后，你会进入那种想挽回却不断失序的感觉。</span>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- ═════════ EXPERIENCE ═════════ -->
 <section class="section section-bg-light" id="experience">
@@ -1625,71 +1733,43 @@ footer {
       <div class="exp-eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;opacity:0.7;">// 实习 · internships</div>
       <div class="exp-list">
         <div class="exp-item">
-          <div class="exp-date">2024.02 — 2024.12</div>
-          <div>
-            <div class="exp-role">产品与孵化实习生</div>
-            <div class="exp-co">初心资本 · Monad Ventures</div>
-            <div class="exp-body">写过 38 篇投资备忘录；评估 LLM 能力边界——记忆长度、角色一致性、内容过滤。这些一线材料后来直接长成了 Hound。</div>
-          </div>
-          <div class="exp-tag">VC · Beijing</div>
+          <div class="exp-company">初心资本</div>
+          <div class="exp-role">投资与孵化实习生</div>
+          <div class="exp-date">2024.2 - 2024.12</div>
         </div>
         <div class="exp-item">
-          <div class="exp-date">2023.01 — 2023.12</div>
-          <div>
-            <div class="exp-role">咨询实习生</div>
-            <div class="exp-co">波士顿咨询 · BCG</div>
-            <div class="exp-body">把用户研究的发现翻译成产品需求与工程规格。练的是把一个想法在设计、产品、工程之间搬运而不变形的肌肉。</div>
-          </div>
-          <div class="exp-tag">Consulting</div>
+          <div class="exp-company">波士顿咨询</div>
+          <div class="exp-role">咨询实习生</div>
+          <div class="exp-date">2023.1 - 2023.12</div>
         </div>
         <div class="exp-item">
-          <div class="exp-date">2022.09 — 2022.12</div>
-          <div>
-            <div class="exp-role">投资实习生</div>
-            <div class="exp-co">中信资本 · CITIC Capital</div>
-            <div class="exp-body">参与一级市场项目尽调与行业研究。</div>
-          </div>
-          <div class="exp-tag">PE · Beijing</div>
+          <div class="exp-company">中信资本</div>
+          <div class="exp-role">投资实习生</div>
+          <div class="exp-date">2022.09 - 2022.12</div>
         </div>
         <div class="exp-item">
-          <div class="exp-date">2022.06 — 2022.09</div>
-          <div>
-            <div class="exp-role">投资实习生</div>
-            <div class="exp-co">H Capital</div>
-            <div class="exp-body">研究 TMT 与新消费赛道，撰写公司分析与行业 mapping。</div>
-          </div>
-          <div class="exp-tag">VC</div>
+          <div class="exp-company">H Capital（PE）</div>
+          <div class="exp-role">投资实习生（PE）</div>
+          <div class="exp-date">2022.06 - 2022.09</div>
         </div>
       </div>
 
       <div class="exp-eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin:48px 0 16px;opacity:0.7;">// 学业 · education</div>
       <div class="exp-list">
         <div class="exp-item">
-          <div class="exp-date">2025.08 — 2027.05</div>
-          <div>
-            <div class="exp-role">信息系统工程双硕士 · 最高额奖学金</div>
-            <div class="exp-co">Cornell University &amp; Technion（康奈尔 · 以色列理工）</div>
-            <div class="exp-body">用户研究、HCI、Unity 3D 绘图软件、AI 模型基准测试、AI 知识产权法、残障友好设计。</div>
-          </div>
-          <div class="exp-tag">M.Eng · NYC</div>
+          <div class="exp-company">康奈尔大学 &amp; 以色列理工大学</div>
+          <div class="exp-date">2025.8 - 2027.5</div>
+          <div class="exp-desc">信息系统工程双硕士学位，最高额奖学金</div>
         </div>
         <div class="exp-item">
-          <div class="exp-date">2023.08 — 2023.12</div>
-          <div>
-            <div class="exp-role">伯克利全球访学项目 · GPA 4.00 / 4.00</div>
-            <div class="exp-co">UC Berkeley</div>
-            <div class="exp-body">一学期访学，跨学科课程探索。</div>
-          </div>
-          <div class="exp-tag">Exchange</div>
+          <div class="exp-company">加州大学伯克利分校</div>
+          <div class="exp-date">2023.8 - 2023.12</div>
+          <div class="exp-desc">伯克利全球访学项目<br>GPA: 4.00 / 4.00</div>
         </div>
         <div class="exp-item">
-          <div class="exp-date">2021.09 — 2025.06</div>
-          <div>
-            <div class="exp-role">数据科学 &amp; 应用经济学 双学士 · 国家奖学金 · GPA 3.8 / 4.0</div>
-            <div class="exp-co">中国人民大学 · Renmin University of China</div>
-            <div class="exp-body">主修数据科学与应用经济，2022–2023 学年担任人大辩论队队长。</div>
-          </div>
-          <div class="exp-tag">B.Sc &amp; B.Econ</div>
+          <div class="exp-company">中国人民大学</div>
+          <div class="exp-date">2021.9 - 2025.6</div>
+          <div class="exp-desc">数据科学 &amp; 应用经济学学士，国家奖学金<br>GPA: 3.8 / 4.0</div>
         </div>
       </div>
     </div>
@@ -1711,7 +1791,7 @@ footer {
           <h2 class="podcast-name">不上岸<em>.</em></h2>
           <p class="podcast-sub">聊产品、AI、和不打算上岸的那些事。<br>每一期都是一个还没想清楚但决定先说出来的问题。</p>
         </div>
-        <a href="https://www.xiaoyuzhoufm.com" target="_blank" class="podcast-btn">
+        <a href="https://www.xiaoyuzhoufm.com/podcast/67d54a99453c9f4f1e9cc5e0" target="_blank" class="podcast-btn">
           listen on 小宇宙 →
         </a>
       </div>
@@ -1790,7 +1870,7 @@ footer {
     </div>
     <div>
       <div class="footer-block-title">listen</div>
-      <a href="https://www.xiaoyuzhoufm.com" target="_blank">→ 不上岸 / 小宇宙</a>
+      <a href="https://www.xiaoyuzhoufm.com/podcast/67d54a99453c9f4f1e9cc5e0" target="_blank">→ 不上岸 / 小宇宙</a>
     </div>
     <div>
       <div class="footer-block-title">read</div>
@@ -1978,10 +2058,9 @@ footer {
 
 // ═════════ TYPEWRITER EFFECT ═════════
 (() => {
-  const elements = document.querySelectorAll('.typewriter');
+  const elements = Array.from(document.querySelectorAll('.typewriter'));
   if (elements.length === 0) return;
 
-  // Wrap each character in a span (preserving inline HTML like <strong>)
   function wrapChars(node) {
     const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
     const textNodes = [];
@@ -2002,33 +2081,102 @@ footer {
     });
   }
 
-  function play(el) {
-    const delay = parseInt(el.dataset.twDelay || '0', 10);
-    el.classList.add('tw-active');
-    const chars = el.querySelectorAll('.tw-char');
-    const charDelay = 32;  // ms per character — feels brisk but readable
-
-    chars.forEach((c, i) => {
-      c.style.animationDelay = (delay + i * charDelay) + 'ms';
-    });
-
-    const totalTime = delay + chars.length * charDelay + 600;
-    setTimeout(() => el.classList.add('tw-done'), totalTime);
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   elements.forEach(wrapChars);
 
-  const triggered = new WeakSet();
-  const tw_observer = new IntersectionObserver(entries => {
+  async function play(el, initialDelay = 0) {
+    const chars = Array.from(el.querySelectorAll('.tw-char'));
+    const cursor = document.createElement('span');
+    cursor.className = 'tw-cursor';
+    cursor.textContent = '▍';
+    const charDelay = 32;
+
+    await sleep(initialDelay);
+    el.appendChild(cursor);
+
+    for (const char of chars) {
+      char.classList.add('tw-visible');
+      char.insertAdjacentElement('afterend', cursor);
+      await sleep(charDelay);
+    }
+
+    await sleep(240);
+    cursor.remove();
+  }
+
+  async function playSequence() {
+    for (const [index, el] of elements.entries()) {
+      await play(el, index === 0 ? 120 : 0);
+    }
+  }
+
+  let started = false;
+  const twObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && !triggered.has(entry.target)) {
-        triggered.add(entry.target);
-        play(entry.target);
+      if (entry.isIntersecting && !started) {
+        started = true;
+        twObserver.disconnect();
+        playSequence();
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.35 });
 
-  elements.forEach(el => tw_observer.observe(el));
+  twObserver.observe(elements[0]);
+})();
+
+document.querySelectorAll('.proj-item[data-href]').forEach(card => {
+  const href = card.dataset.href;
+  if (!href) return;
+
+  card.tabIndex = 0;
+
+  card.addEventListener('click', event => {
+    if (event.target.closest('a')) return;
+    window.open(href, '_blank', 'noopener');
+  });
+
+  card.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      window.open(href, '_blank', 'noopener');
+    }
+  });
+});
+
+(() => {
+  const modal = document.getElementById('aestheticModal');
+  const openBtn = document.querySelector('[data-aesthetic-open]');
+  if (!modal || !openBtn) return;
+
+  const closeTargets = modal.querySelectorAll('[data-aesthetic-close]');
+
+  function openModal() {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeTargets.forEach(el => el.addEventListener('click', closeModal));
+
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
 })();
 
 

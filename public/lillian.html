@@ -292,14 +292,18 @@ body::before {
 
 .hero-resume {
   position: relative;
-  left: 50%;
+  left: auto;
   margin-top: 14px;
-  margin-left: 0;
-  transform: translateX(-50%);
+  margin-left: auto;
+  margin-right: auto;
+  transform: none;
   width: 112px;
   opacity: 0;
   animation: fadeUp 0.9s ease 0.8s forwards;
   z-index: 24;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-resume .icon-thumb {
@@ -325,6 +329,11 @@ body::before {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeUpCentered {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* ─────────── DESKTOP ICONS (the magic) ─────────── */
 .desktop-icon {
   position: absolute;
@@ -343,6 +352,20 @@ body::before {
   opacity: 0;
   animation: iconAppear 0.5s ease forwards;
   will-change: transform;
+}
+
+.desktop-icon.hero-resume {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  margin: 14px auto 0;
+  transform: none;
+  width: 112px;
+  z-index: 24;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.8s forwards;
 }
 
 .desktop-icon:hover .icon-thumb {
@@ -638,8 +661,7 @@ body::before {
   gap: 10px;
   align-items: center;
   box-shadow: 0 6px 28px rgba(0,0,0,0.10);
-  opacity: 0;
-  animation: fadeUp 0.6s ease 1.4s forwards;
+  opacity: 1;
 }
 
 .dock-item {
@@ -1120,15 +1142,21 @@ body::before {
 .aesthetic-modal {
   position: fixed;
   inset: 0;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   z-index: 1200;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
 }
 
 .aesthetic-modal.is-open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .aesthetic-modal-backdrop {
@@ -1137,6 +1165,8 @@ body::before {
   background: rgba(26, 22, 18, 0.28);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.18s ease;
 }
 
 .aesthetic-modal-panel {
@@ -1148,6 +1178,18 @@ body::before {
   border-radius: 14px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.14);
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.aesthetic-modal.is-open .aesthetic-modal-backdrop {
+  opacity: 1;
+}
+
+.aesthetic-modal.is-open .aesthetic-modal-panel {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .aesthetic-modal-head {
@@ -1216,15 +1258,21 @@ body::before {
 .site-modal {
   position: fixed;
   inset: 0;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   z-index: 1300;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
 }
 
 .site-modal.is-open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .site-modal-backdrop {
@@ -1233,6 +1281,8 @@ body::before {
   background: rgba(26, 22, 18, 0.28);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.18s ease;
 }
 
 .site-modal-panel {
@@ -1245,6 +1295,18 @@ body::before {
   border: 1px solid rgba(26, 22, 18, 0.12);
   border-radius: 14px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.14);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.site-modal.is-open .site-modal-backdrop {
+  opacity: 1;
+}
+
+.site-modal.is-open .site-modal-panel {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .site-modal-head {
@@ -1817,9 +1879,10 @@ footer {
   .hero-resume {
     position: relative;
     bottom: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 14px;
+    left: auto;
+    right: auto;
+    transform: none;
+    margin: 14px auto 0;
     opacity: 1;
     gap: 2px;
   }
@@ -2256,7 +2319,7 @@ footer {
           <div class="proj-thumb"><img src="./entropy.jpeg" alt="美学装置 screenshot"></div>
           <div class="proj-status">
             <span class="wip">2 pieces</span>
-            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open data-modal-trigger="aestheticModal">Explore →</button>
+            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open data-modal-trigger="aestheticModal"><span class="proj-arrow-text">Explore</span><span class="proj-arrow-mark">→</span></button>
           </div>
         </div>
       </div>

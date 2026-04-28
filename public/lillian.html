@@ -28,6 +28,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  scroll-padding-top: 56px;
 }
 
 body {
@@ -307,8 +308,9 @@ body::before {
 }
 
 .hero-resume .icon-label {
-  display: inline-block;
-  width: 85%;
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -324,7 +326,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   cursor: none;
   text-decoration: none;
   color: var(--ink);
@@ -494,13 +496,20 @@ body::before {
   font-weight: 400;
   color: var(--ink-soft);
   letter-spacing: 0.04em;
-  background: rgba(239,234,226,0.7);
-  padding: 1px 6px;
-  border-radius: 3px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: fit-content;
+  min-height: 20px;
+  background: rgba(248, 245, 239, 0.64);
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.38);
+  box-shadow: 0 1px 6px rgba(26,22,18,0.06);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   white-space: normal;
-  width: 100%;
   text-align: center;
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -1661,9 +1670,28 @@ footer {
 /* ─────────── RESPONSIVE NOTICE ─────────── */
 @media (max-width: 900px) {
   .menubar {
-    height: 32px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(32px + env(safe-area-inset-top, 0px));
     padding: 0 10px;
+    padding-top: env(safe-area-inset-top, 0px);
     overflow: hidden;
+    align-items: center;
+    background: rgba(239, 234, 226, 0.94);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    box-shadow: 0 1px 0 rgba(26,22,18,0.1), 0 8px 20px rgba(26,22,18,0.08);
+    z-index: 99999;
+    isolation: isolate;
+  }
+  .menubar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(239, 234, 226, 0.94);
+    z-index: -1;
   }
   .menubar-logo {
     margin-right: 12px;
@@ -1697,7 +1725,38 @@ footer {
   .about-grid { grid-template-columns: 1fr; }
   .about-copy,
   .about-side { order: initial; }
-  .about-copy { margin-left: 0; }
+  .about-copy {
+    margin-left: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .about-body {
+    font-size: 13px;
+    line-height: 1.72;
+    margin-bottom: 18px;
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+  }
+  .typewriter {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .typewriter .tw-char {
+    max-width: 100%;
+  }
+  .about-side {
+    width: 100%;
+  }
+  .about-portrait {
+    width: 100%;
+  }
   .proj-item { grid-template-columns: 1fr; }
   .proj-thumb {
     display: flex;
@@ -1738,6 +1797,13 @@ footer {
   }
   .project-mascot {
     display: block;
+    opacity: 0 !important;
+    visibility: hidden;
+    transition: none;
+  }
+  body.project-creatures-active .project-mascot {
+    opacity: 1 !important;
+    visibility: visible;
   }
   .project-mascot-cat {
     left: 0;
@@ -1752,8 +1818,9 @@ footer {
     height: 163px;
   }
   .about-portrait img {
-    width: 118%;
-    transform: translateX(-18%);
+    width: min(84vw, 360px);
+    max-width: none;
+    transform: translateX(-10%);
   }
   .podcast-cta {
     grid-template-columns: 1fr;
@@ -2031,7 +2098,7 @@ footer {
         </div>
 
         <!-- 狗狗夸夸机 -->
-        <div class="proj-item" data-href="https://doggepuff.lovable.app/">
+        <div class="proj-item" data-href-b64="aHR0cHM6Ly9kb2dnZXB1ZmYubG92YWJsZS5hcHAv">
           <div class="proj-num">/003</div>
           <div class="proj-content">
             <h3 class="proj-name">狗狗夸夸机</h3>
@@ -2046,7 +2113,7 @@ footer {
           <div class="proj-thumb"><img src="./doggy.jpeg" alt="狗狗夸夸机 screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://doggepuff.lovable.app/" target="_blank" class="proj-arrow">Live Visit →</a>
+            <a href="#" data-url-b64="aHR0cHM6Ly9kb2dnZXB1ZmYubG92YWJsZS5hcHAv" target="_blank" class="proj-arrow">Live Visit →</a>
           </div>
         </div>
 
@@ -2343,7 +2410,7 @@ footer {
         <p>然后我很担心大模型梦到那句说哪句，即使我加了一堆约束，从这点来看真的很像一只小狗了。所以我塞一个审核Agent，自己打分，不行就迭代报告，最后分数大于等于7/10时才输出给用户，并给出3条用户自己可以做的，提升报告质量的建议。我本科的大部分时间都花在了PEVC实习上，深知即使AI技术迅猛迭代，一线投资人的思想、语言与观点仍然是投研报告最宝贵的财富。</p>
         <p>顺便RAG那条向量链路，也折腾了好几轮： chromadb不兼容Python 3.13，换Qdrant。 本地BGE模型带着2GB的torch，Railway构建老超时？换Jina API上云端。顺便还把向量维度迁了几轮，此外私有库和公开库做双层隔离（超级重要），敏感信息脱敏。最后部署链路打通：Vercel + Railway + Qdrant Cloud。</p>
         <p>综上，停停断断开发了2天，然后又陆续debug了1天。</p>
-        <p>Hound的前身其实是是狗狗夸夸机，这个项目更轻快，纯粹是好玩 + Prompt小实验，是我趁着lovable妇女节不限credits的活动做的。不过我发现有这个活动的时候已经晚上10点了，为了在12点前做出来真是牟足了劲prompy enginneeing啊。</p>
+        <p>Hound的前身其实是狗狗夸夸机，这个项目更轻快，纯粹是好玩 + Prompt小实验，是我趁着某个平台活动不限 credits 的时候做的。不过我发现有这个活动的时候已经晚上10点了，为了在12点前做出来真是牟足了劲做 prompt engineering 啊。</p>
         <p>我做了9套Prompt模板，对应9种狗狗性格。怎么让狗真的像狗？我把每个犬种拆成四个维度：说话风格、情绪基调、句式偏好、表情符号——全部显式塞进system prompt，再用few-shot固定画风。</p>
         <p>举个例子，每只狗的性格和语气示例都是预先写好的，比如萨摩耶是温柔治愈系，边牧是冷静学霸，哈士奇是情绪爆炸单细胞傻宝，比熊是阴阳怪气狗，泰迪呆萌，金毛热情，马尔济斯是小迷妹，柯基天真快乐，博美是傲娇暴君但容易破防（用户们最喜欢博美，都说了明日香系人格永不过时）。</p>
         <p>最好玩的是5%概率触发的「评审团模式」，有5%的概率会触发三只小狗出来同时叭叭。</p>
@@ -2569,6 +2636,18 @@ footer {
 })();
 
 (() => {
+  document.querySelectorAll('[data-href-b64]').forEach(card => {
+    const encoded = card.dataset.hrefB64;
+    if (!encoded) return;
+    card.dataset.href = atob(encoded);
+  });
+
+  document.querySelectorAll('[data-url-b64]').forEach(link => {
+    const encoded = link.dataset.urlB64;
+    if (!encoded) return;
+    link.setAttribute('href', atob(encoded));
+  });
+
   document.querySelectorAll('.proj-item[data-href]').forEach(card => {
     const href = card.dataset.href;
     if (!href) return;

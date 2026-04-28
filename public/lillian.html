@@ -287,6 +287,27 @@ body::before {
   animation: fadeUp 0.9s ease 0.65s forwards;
 }
 
+.hero-resume {
+  position: relative;
+  inset: auto;
+  margin: 0 auto;
+  width: 112px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.8s forwards;
+}
+
+.hero-resume .icon-thumb {
+  width: 94px;
+  height: 94px;
+}
+
+.hero-resume .icon-label {
+  background: transparent;
+  padding: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -303,7 +324,7 @@ body::before {
   cursor: none;
   text-decoration: none;
   color: var(--ink);
-  width: 92px;
+  width: 112px;
   text-align: center;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   user-select: none;
@@ -321,8 +342,8 @@ body::before {
 }
 
 .icon-thumb {
-  width: 72px;
-  height: 72px;
+  width: 94px;
+  height: 94px;
   background: var(--bg-light);
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -330,7 +351,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
+  font-size: 42px;
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.25s, border-color 0.25s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -339,6 +360,16 @@ body::before {
 .desktop-icon:hover .icon-thumb {
   box-shadow: var(--shadow-strong);
   border-color: var(--border-strong);
+}
+
+.pos-7 {
+  width: 92px;
+}
+
+.pos-7 .icon-thumb {
+  width: 72px;
+  height: 72px;
+  font-size: 36px;
 }
 
 /* Selection ring on hover */
@@ -477,11 +508,15 @@ body::before {
 /* Specific icon positions — 7 icons, balanced 4+3 */
 .pos-1 { top: 90px;   left: 5%;  animation-delay: 0.7s; }   /* projects - upper left */
 .pos-2 { top: 240px;  left: 10%; animation-delay: 0.85s; }  /* writing - mid-upper left */
-.pos-3 { top: 400px;  left: 5%;  animation-delay: 1.0s; }   /* life - mid-lower left */
+.pos-3 { top: 400px;  left: 5%;  animation-delay: 1.0s; display: none; }
 .pos-4 { bottom: 220px; left: 10%; animation-delay: 1.15s; }/* contact - lower left */
 .pos-5 { top: 90px;   right: 5%; animation-delay: 0.75s; }  /* resume - upper right */
 .pos-6 { top: 280px;  right: 8%; animation-delay: 0.9s; }   /* about - middle right */
 .pos-7 { bottom: 220px; right: 8%; animation-delay: 1.05s; }/* podcast - lower right */
+
+.pos-5 {
+  display: none;
+}
 .pos-8 { bottom: 180px; right: 12%; animation-delay: 1.3s; }
 
 @keyframes iconAppear {
@@ -559,10 +594,10 @@ body::before {
 /* ─────────── DOCK (bottom) ─────────── */
 .dock {
   position: fixed;
-  top: 50%;
+  bottom: 22px;
   left: 50%;
-  bottom: auto;
-  transform: translate(-50%, -50%);
+  top: auto;
+  transform: translateX(-50%);
   z-index: 150;
   background: rgba(239, 234, 226, 0.55);
   backdrop-filter: blur(24px) saturate(150%);
@@ -579,7 +614,7 @@ body::before {
 }
 
 .dock-item {
-  width: 44px; height: 44px;
+  width: 58px; height: 58px;
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
@@ -592,6 +627,11 @@ body::before {
 
 .dock-item:hover {
   transform: translateY(-8px) scale(1.15);
+}
+
+.dock-podcast-shrink {
+  width: 44px;
+  height: 44px;
 }
 
 .dock-item .tooltip {
@@ -621,7 +661,6 @@ body::before {
 
 .dock-projects { background: linear-gradient(135deg, var(--bg-light), #d4c098); }
 .dock-writing { background: linear-gradient(135deg, #fff, #e8e4dc); }
-.dock-life { background: linear-gradient(135deg, #f3d6e5, #f4c2dc); }
 .dock-podcast { background: linear-gradient(135deg, var(--olive), #3d4a2b); color: #efeae2; }
 .dock-resume { background: linear-gradient(135deg, #fff, #f3eee5); font-family: 'Cormorant Garamond', serif; font-style: normal; font-weight: 600; }
 .dock-mail { background: linear-gradient(135deg, #b8d6e8, #8eb8d4); }
@@ -713,9 +752,17 @@ body::before {
 /* ─────────── ABOUT SECTION ─────────── */
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 360px 1fr;
   gap: 64px;
   align-items: start;
+}
+
+.about-side {
+  order: 1;
+}
+
+.about-copy {
+  order: 2;
 }
 
 .about-eyebrow {
@@ -748,6 +795,10 @@ body::before {
 .about-title em {
   font-family: inherit;
   font-style: normal;
+  color: var(--olive);
+}
+
+.about-title-accent {
   color: var(--olive);
 }
 
@@ -784,9 +835,11 @@ body::before {
 }
 
 .about-portrait img {
-  width: 100%;
+  width: 130%;
+  max-width: none;
   height: auto;
   display: block;
+  transform: translateX(-6%);
 }
 
 .meta-table {
@@ -975,8 +1028,15 @@ body::before {
   overflow: hidden;
 }
 
+.proj-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .proj-thumb::before {
-  content: 'screenshot.png';
+  content: '';
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   color: rgba(26,22,18,0.4);
@@ -1000,7 +1060,7 @@ body::before {
 
 .proj-arrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
+  font-size: 28px;
   color: var(--ink-soft);
   margin-top: 10px;
   letter-spacing: 0.5px;
@@ -1113,7 +1173,162 @@ body::before {
   color: var(--ink-soft);
 }
 
+.site-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1300;
+}
+
+.site-modal.is-open {
+  display: flex;
+}
+
+.site-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 22, 18, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.site-modal-panel {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: min(84vh, 900px);
+  overflow: auto;
+  background: rgba(239, 234, 226, 0.97);
+  border: 1px solid rgba(26, 22, 18, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.14);
+}
+
+.site-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  letter-spacing: -0.5px;
+}
+
+.site-modal-close {
+  background: none;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.site-modal-body {
+  padding: 22px;
+}
+
+.modal-option-list {
+  display: grid;
+  gap: 14px;
+}
+
+.modal-option {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.42);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-option:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(26,22,18,0.2);
+}
+
+.modal-option-name {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.modal-option-desc,
+.contact-copy {
+  display: block;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.article-modal-article {
+  display: grid;
+  gap: 18px;
+}
+
+.article-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.article-modal-article p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.article-pdf-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.55);
+}
+
 /* ─────────── EXPERIENCE ─────────── */
+.exp-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+
+.exp-column {
+  min-width: 0;
+}
+
+.exp-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  opacity: 0.75;
+}
+
 .exp-list {
   display: flex;
   flex-direction: column;
@@ -1131,7 +1346,7 @@ body::before {
 
 .exp-date {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--ink-soft);
   letter-spacing: 0.8px;
 }
@@ -1228,6 +1443,10 @@ body::before {
   color: inherit;
   transition: padding-left 0.25s;
   border-radius: 3px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
 }
 .blog-item:hover { padding-left: 14px; }
 .blog-item:last-child { border-bottom: none; }
@@ -1257,6 +1476,37 @@ body::before {
   letter-spacing: 0.8px;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.project-mascot {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.project-mascot img {
+  width: 240px;
+  height: auto;
+  display: block;
+}
+
+.project-mascot-cat {
+  top: 15vh;
+  left: -18px;
+  transform: translateX(-24px);
+}
+
+.project-mascot-dog {
+  top: 24vh;
+  right: -12px;
+  transform: translateX(24px);
+}
+
+body.project-creatures-active .project-mascot {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* ─────────── LIFE GALLERY ─────────── */
@@ -1371,15 +1621,19 @@ footer {
 @media (max-width: 900px) {
   .desktop-icon { display: none; }
   .about-grid { grid-template-columns: 1fr; }
+  .about-copy,
+  .about-side { order: initial; }
   .proj-item { grid-template-columns: 1fr; }
   .proj-thumb { display: none; }
   .exp-item { grid-template-columns: 1fr; gap: 8px; }
+  .exp-columns { grid-template-columns: 1fr; gap: 40px; }
   .footer-content { grid-template-columns: 1fr; }
   .window-body { padding: 36px 24px; }
   .section { padding: 64px 20px 80px; }
   .desktop { padding: 60px 20px 100px; }
   .hero-name { font-size: 56px !important; }
   .dock { display: none; }
+  .project-mascot { display: none; }
 }
 </style>
 </head>
@@ -1398,7 +1652,6 @@ footer {
     <a href="#projects" class="menubar-item">Projects</a>
     <a href="#experience" class="menubar-item">Experience</a>
     <a href="#writing" class="menubar-item">Writing</a>
-    <a href="#life" class="menubar-item">Life</a>
     <a href="#podcast" class="menubar-item">Podcast</a>
   </div>
   <div class="menubar-right">
@@ -1463,6 +1716,12 @@ footer {
     <p class="hero-tagline-cn">
       —— Cornell Tech 学生 · builder · 播客主理人
     </p>
+    <a href="./cv.pdf" target="_blank" class="desktop-icon hero-resume">
+      <div class="icon-thumb icon-img">
+        <img src="./resume-icon.png" alt="简历">
+      </div>
+      <span class="icon-label">简历</span>
+    </a>
   </div>
 </section>
 
@@ -1505,12 +1764,12 @@ footer {
     </div>
     <div class="window-body">
       <div class="about-grid">
-        <div>
+        <div class="about-copy">
           <div class="about-eyebrow">README</div>
           <h2 class="about-title">
             金融的视角，<br>
             产品的双手，<br>
-            代码的节奏。
+            <span class="about-title-accent">代码的节奏。</span>
           </h2>
           <p class="about-body typewriter" data-tw-delay="0">
             我是 Lillian —— 生于 2004 年，Cornell Tech 研一学生，<strong>builder</strong>，闲暇时录<strong>播客</strong>。对市场、AI，以及一切「如何运作」的事物，都怀有强烈的好奇。
@@ -1525,9 +1784,9 @@ footer {
             对我而言，最有魅力的地方，始终在两种事物的交汇处。
           </p>
         </div>
-        <div>
+        <div class="about-side">
           <div class="about-portrait">
-            <img src="/your.png" alt="Lillian Li portrait">
+            <img src="./your.png" alt="Lillian Li portrait">
           </div>
           <div class="meta-table">
             <div class="meta-row">
@@ -1552,6 +1811,13 @@ footer {
     </div>
   </div>
 </section>
+
+<div class="project-mascot project-mascot-cat" aria-hidden="true">
+  <img src="./cat.png" alt="">
+</div>
+<div class="project-mascot project-mascot-dog" aria-hidden="true">
+  <img src="./dog.png" alt="">
+</div>
 
 <!-- ═════════ PROJECTS ═════════ -->
 <section class="section section-bg-warm" id="projects">
@@ -1583,7 +1849,7 @@ footer {
               <span class="proj-tag">Multi-Agent</span>
             </div>
           </div>
-          <div class="proj-thumb">hound.png</div>
+          <div class="proj-thumb"><img src="./Hound.jpeg" alt="Hound screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
             <a href="https://hound-mu.vercel.app/" target="_blank" class="proj-arrow">Live Visit →</a>
@@ -1595,7 +1861,7 @@ footer {
           <div class="proj-num">/002</div>
           <div class="proj-content">
             <h3 class="proj-name">Painpal</h3>
-            <p class="proj-desc">为多模态疼痛追踪应用设计了完整的定性研究流程。深度访谈 Adapt Community Network 的专业人员与临床医生，围绕三个问题：临床工作流是什么样的？疼痛记录的真实障碍在哪里？幻肢痛的实操治疗方法是什么？<br><br>把答案翻译成技术需求规格：多模态疼痛输入（文字 / 语音 / 图像）、色盲友好 UI 标准、CBT 集成交互框架，并完成 UI 设计。</p>
+            <p class="proj-desc">为多模态疼痛追踪应用设计了完整的定性研究流程。深度访谈 Adapt Community Network 的专业人员与临床医生，围绕三个问题：临床工作流是什么样的？疼痛记录的真实障碍在哪里？幻肢痛的实操治疗方法是什么？<br><br>此外，还需把答案翻译成技术需求规格：多模态疼痛输入（文字 / 语音 / 图像）、色盲友好 UI 标准、CBT 集成交互框架，并完成 UI 设计。</p>
             <div class="proj-tags">
               <span class="proj-tag">Figma</span>
               <span class="proj-tag">UX Research</span>
@@ -1603,7 +1869,7 @@ footer {
               <span class="proj-tag">Healthcare</span>
             </div>
           </div>
-          <div class="proj-thumb">painpal.png</div>
+          <div class="proj-thumb"><img src="./Painpal.jpeg" alt="Painpal screenshot"></div>
           <div class="proj-status">
             <span class="wip">research</span>
             <div class="proj-arrow">case study →</div>
@@ -1623,7 +1889,7 @@ footer {
               <span class="proj-tag">Prompt Engineering</span>
             </div>
           </div>
-          <div class="proj-thumb">dogge.png</div>
+          <div class="proj-thumb"><img src="./doggy.jpeg" alt="狗狗夸夸机 screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
             <a href="https://doggepuff.lovable.app/" target="_blank" class="proj-arrow">Live Visit →</a>
@@ -1631,7 +1897,7 @@ footer {
         </div>
 
         <!-- Univonest -->
-        <div class="proj-item" data-href="https://univonest-web.vercel.app">
+        <div class="proj-item" data-modal-trigger="univonestModal">
           <div class="proj-num">/004</div>
           <div class="proj-content">
             <h3 class="proj-name">Univonest</h3>
@@ -1644,10 +1910,10 @@ footer {
               <span class="proj-tag">UX</span>
             </div>
           </div>
-          <div class="proj-thumb">univonest.png</div>
+          <div class="proj-thumb"><img src="./univonest1.jpeg" alt="Univonest screenshot"></div>
           <div class="proj-status">
             <span class="live">live</span>
-            <a href="https://univonest-web.vercel.app" target="_blank" class="proj-arrow">Live Visit →</a>
+            <button type="button" class="proj-arrow proj-cta-btn" data-modal-trigger="univonestModal">Live Visit →</button>
           </div>
         </div>
 
@@ -1673,7 +1939,7 @@ footer {
         </div>
 
         <!-- 美学装置 -->
-        <div class="proj-item">
+        <div class="proj-item" data-modal-trigger="aestheticModal">
           <div class="proj-num">/006</div>
           <div class="proj-content">
             <h3 class="proj-name">美学装置</h3>
@@ -1685,10 +1951,10 @@ footer {
               <span class="proj-tag">Poetic Computing</span>
             </div>
           </div>
-          <div class="proj-thumb">aesthetic.png</div>
+          <div class="proj-thumb"><img src="./entropy.jpeg" alt="美学装置 screenshot"></div>
           <div class="proj-status">
-            <span class="wip">3 pieces</span>
-            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open>explore →</button>
+            <span class="wip">2 pieces</span>
+            <button type="button" class="proj-arrow proj-cta-btn" data-aesthetic-open data-modal-trigger="aestheticModal">explore →</button>
           </div>
         </div>
       </div>
@@ -1706,12 +1972,32 @@ footer {
     <div class="aesthetic-modal-body">
       <a href="breath.html" class="aesthetic-option">
         <span class="aesthetic-option-name">呼吸</span>
-        <span class="aesthetic-option-desc">一个 4 秒吸，4 秒呼的冥想装置。点进去后，你会进入那个粉色小光点的呼吸节奏。</span>
+        <span class="aesthetic-option-desc">一个4秒吸，4秒呼的冥想装置。</span>
       </a>
       <a href="entropy.html" class="aesthetic-option">
         <span class="aesthetic-option-name">熵</span>
-        <span class="aesthetic-option-desc">字会慢慢崩塌腐烂，点击可拯救。点进去后，你会进入那种想挽回却不断失序的感觉。</span>
+        <span class="aesthetic-option-desc">字随时间崩塌腐烂，点击可拯救。</span>
       </a>
+    </div>
+  </div>
+</div>
+
+<div class="site-modal" id="univonestModal" aria-hidden="true">
+  <div class="site-modal-backdrop" data-modal-close></div>
+  <div class="site-modal-panel" role="dialog" aria-modal="true" aria-labelledby="univonestModalTitle">
+    <div class="site-modal-head">
+      <div class="site-modal-title" id="univonestModalTitle">Univonest</div>
+      <button type="button" class="site-modal-close" data-modal-close>close</button>
+    </div>
+    <div class="site-modal-body">
+      <div class="modal-option-list">
+        <a href="https://univonest-web.vercel.app" target="_blank" class="modal-option">
+          <span class="modal-option-name">Univonest 二手交易</span>
+        </a>
+        <a href="https://univoroomi.com" target="_blank" class="modal-option">
+          <span class="modal-option-name">Univoroomi 室友匹配</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -1729,47 +2015,51 @@ footer {
         <h2 class="projects-title">where I've <em>been</em>.</h2>
         <div class="projects-meta">internships · education<br>2021 — present</div>
       </div>
-
-      <div class="exp-eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;opacity:0.7;">// 实习 · internships</div>
-      <div class="exp-list">
-        <div class="exp-item">
-          <div class="exp-company">初心资本</div>
-          <div class="exp-role">投资与孵化实习生</div>
-          <div class="exp-date">2024.2 - 2024.12</div>
+      <div class="exp-columns">
+        <div class="exp-column">
+          <div class="exp-eyebrow">// 实习 · internships</div>
+          <div class="exp-list">
+            <div class="exp-item">
+              <div class="exp-company">初心资本</div>
+              <div class="exp-role">投资与孵化实习生</div>
+              <div class="exp-date">2024.2 - 2024.12</div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-company">波士顿咨询</div>
+              <div class="exp-role">咨询实习生</div>
+              <div class="exp-date">2023.1 - 2023.12</div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-company">中信资本</div>
+              <div class="exp-role">投资实习生</div>
+              <div class="exp-date">2022.09 - 2022.12</div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-company">H Capital</div>
+              <div class="exp-role">投资实习生</div>
+              <div class="exp-date">2022.06 - 2022.09</div>
+            </div>
+          </div>
         </div>
-        <div class="exp-item">
-          <div class="exp-company">波士顿咨询</div>
-          <div class="exp-role">咨询实习生</div>
-          <div class="exp-date">2023.1 - 2023.12</div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-company">中信资本</div>
-          <div class="exp-role">投资实习生</div>
-          <div class="exp-date">2022.09 - 2022.12</div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-company">H Capital（PE）</div>
-          <div class="exp-role">投资实习生（PE）</div>
-          <div class="exp-date">2022.06 - 2022.09</div>
-        </div>
-      </div>
-
-      <div class="exp-eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin:48px 0 16px;opacity:0.7;">// 学业 · education</div>
-      <div class="exp-list">
-        <div class="exp-item">
-          <div class="exp-company">康奈尔大学 &amp; 以色列理工大学</div>
-          <div class="exp-date">2025.8 - 2027.5</div>
-          <div class="exp-desc">信息系统工程双硕士学位，最高额奖学金</div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-company">加州大学伯克利分校</div>
-          <div class="exp-date">2023.8 - 2023.12</div>
-          <div class="exp-desc">伯克利全球访学项目<br>GPA: 4.00 / 4.00</div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-company">中国人民大学</div>
-          <div class="exp-date">2021.9 - 2025.6</div>
-          <div class="exp-desc">数据科学 &amp; 应用经济学学士，国家奖学金<br>GPA: 3.8 / 4.0</div>
+        <div class="exp-column">
+          <div class="exp-eyebrow">// 学业 · education</div>
+          <div class="exp-list">
+            <div class="exp-item">
+              <div class="exp-company">康奈尔大学 &amp; 以色列理工大学</div>
+              <div class="exp-date">2025.8 - 2027.5</div>
+              <div class="exp-desc">信息系统工程双硕士学位，最高额奖学金</div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-company">加州大学伯克利分校</div>
+              <div class="exp-date">2023.8 - 2023.12</div>
+              <div class="exp-desc">伯克利全球访学项目<br>GPA: 4.00 / 4.00</div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-company">中国人民大学</div>
+              <div class="exp-date">2021.9 - 2025.6</div>
+              <div class="exp-desc">数据科学 &amp; 应用经济学学士，国家奖学金<br>GPA: 3.8 / 4.0</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1805,7 +2095,7 @@ footer {
     <div class="window-titlebar">
       <div class="window-dots"><div class="window-dot"></div><div class="window-dot"></div><div class="window-dot"></div></div>
       <div class="window-title">~/writing/</div>
-      <div class="window-meta">3 items</div>
+      <div class="window-meta">2 items</div>
     </div>
     <div class="window-body">
       <div class="projects-header" style="margin-bottom:32px;">
@@ -1813,58 +2103,97 @@ footer {
         <div class="projects-meta">blog<br>occasional</div>
       </div>
       <div class="blog-list">
-        <a class="blog-item" href="#">
-          <span class="blog-date">2025.04</span>
-          <span class="blog-title">从 38 篇投资备忘录到一个 AI 研究助手：Hound 的诞生</span>
-          <span class="blog-tag">AI</span>
-        </a>
-        <a class="blog-item" href="#">
-          <span class="blog-date">2025.03</span>
-          <span class="blog-title">低代码与写代码之间：我为什么从 Coze 转向 Python</span>
-          <span class="blog-tag">Product</span>
-        </a>
-        <a class="blog-item" href="#">
-          <span class="blog-date">2025.02</span>
-          <span class="blog-title">在 VC 评估 LLM：记忆长度、角色一致性与内容过滤</span>
-          <span class="blog-tag">Research</span>
-        </a>
+        <button type="button" class="blog-item" data-modal-trigger="articleLegalModal">
+          <span class="blog-date">2026.03</span>
+          <span class="blog-title">创业公司法律避坑</span>
+          <span class="blog-tag">Law</span>
+        </button>
+        <button type="button" class="blog-item" data-modal-trigger="articleHoundModal">
+          <span class="blog-date">2026.04</span>
+          <span class="blog-title">从狗狗夸夸机到Hound：开发心得</span>
+          <span class="blog-tag">Build</span>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═════════ LIFE ═════════ -->
-<section class="section section-bg-warm" id="life">
-  <div class="window reveal">
-    <div class="window-titlebar">
-      <div class="window-dots"><div class="window-dot"></div><div class="window-dot"></div><div class="window-dot"></div></div>
-      <div class="window-title">~/life/</div>
-      <div class="window-meta">photo gallery</div>
+<div class="site-modal" id="contactModal" aria-hidden="true">
+  <div class="site-modal-backdrop" data-modal-close></div>
+  <div class="site-modal-panel" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="site-modal-head">
+      <div class="site-modal-title" id="contactModalTitle">context.txt</div>
+      <button type="button" class="site-modal-close" data-modal-close>close</button>
     </div>
-    <div class="window-body">
-      <div class="projects-header" style="margin-bottom:24px;">
-        <h2 class="projects-title">life, <em>off-clock</em>.</h2>
-        <div class="projects-meta">photo gallery<br>tap to enlarge</div>
-      </div>
-      <div class="life-grid">
-        <div class="life-cell tall"></div>
-        <div class="life-cell"></div>
-        <div class="life-cell"></div>
-        <div class="life-cell wide"></div>
-        <div class="life-cell"></div>
-        <div class="life-cell"></div>
-        <div class="life-cell"></div>
-      </div>
+    <div class="site-modal-body">
+      <div class="contact-copy">邮箱：xl2266@cornell.edu。有什么想跟我说的话都欢迎email我！</div>
     </div>
   </div>
-</section>
+</div>
+
+<div class="site-modal" id="articleLegalModal" aria-hidden="true">
+  <div class="site-modal-backdrop" data-modal-close></div>
+  <div class="site-modal-panel" role="dialog" aria-modal="true" aria-labelledby="articleLegalModalTitle">
+    <div class="site-modal-head">
+      <div class="site-modal-title" id="articleLegalModalTitle">创业公司法律避坑</div>
+      <button type="button" class="site-modal-close" data-modal-close>close</button>
+    </div>
+    <div class="site-modal-body">
+      <article class="article-modal-article">
+        <div class="article-meta">2026.03</div>
+        <p>大家好！</p>
+        <p>我在26spring学期修了好几门Cornell Tech法学院的课，收获颇丰。话说其实我还是从中国第一法学院的学校里毕业的勒，竟然到了研究生才想到要去蹭法学院的智慧。惭愧惭愧。</p>
+        <p>这份指南从康奈尔大学的一门创业法课程出发，提炼出第一次创业者最容易踩的法律坑。比如，离职创业前，你的发明属于谁？「先干再注册实体」是个好主意吗？公司注册时要准备哪些文件？雇佣员工是按合同工还是正式雇员雇佣呢？口头房租能成吗？</p>
+        <p>读者不需要有法律背景，只需要在做决定、签合同、写计划之前看一眼——很多问题，在早期花很少的钱和时间就能避免。</p>
+        <p>本指南分两部分：</p>
+        <p>第一部分：15个问题与everyday创业情境，每题有简明答案和知识点讲解<br>第二部分：知识清单，所有概念一网打尽，随时查阅</p>
+        <p>请点开pdf进行阅读吧！</p>
+        <a href="./legal-guide.pdf" target="_blank" class="article-pdf-link">PDF 按钮</a>
+      </article>
+    </div>
+  </div>
+</div>
+
+<div class="site-modal" id="articleHoundModal" aria-hidden="true">
+  <div class="site-modal-backdrop" data-modal-close></div>
+  <div class="site-modal-panel" role="dialog" aria-modal="true" aria-labelledby="articleHoundModalTitle">
+    <div class="site-modal-head">
+      <div class="site-modal-title" id="articleHoundModalTitle">从狗狗夸夸机到Hound：开发心得</div>
+      <button type="button" class="site-modal-close" data-modal-close>close</button>
+    </div>
+    <div class="site-modal-body">
+      <article class="article-modal-article">
+        <div class="article-meta">2026.04</div>
+        <p>Hound的诞生，是因为Opus 4.7发布了。然后我发现，市面上的Agent项目层出不穷，复制起来页很快。所以我忍不住想：如果技术跑得比认知快，那产品的护城河到底是什么呢？</p>
+        <p>我得出的结论是，知识库和使用感受。</p>
+        <p>知识库：只能在我这里获取的知识与knowhow。<br>使用感受：让用户用着方便、开心。总结来说就是要让用户用得爽。提供情绪价值与效率，是技术快速变迁时代，产品的两条捷径。</p>
+        <p>Hound就出生于这两条准则，我写了个飞书应用，批量整理了一批可以复用经验的投研文件，完成了脱敏，然后量化了，构成了Hound的知识库。</p>
+        <p>那情绪价值怎么给？我觉得最简单的方法是给产品一个“人设”。颜色、UI、小设计、吉祥物，都是为了达到这一目的的手段。 我希望Hound看起来专业又谦和，因此选了淡淡墨绿，显得</p>
+        <p>然后，我希望用户能和Hound有情感连接——那就养只小狗吧！而且要最聪明的边牧。（其实我最喜欢的是萨摩耶，很有亲和力的棉花糖团子，但是让萨摩耶来写投研分析估计用户不会放心吧……）</p>
+        <p>我先在Procreate上画了个小边牧草稿，然后让 ChatGPT Images 2.0 模型帮我生成了一堆小边牧：思考的、撒欢的、吃东西的、星星眼的……自己画是很重要的，因为最近在听Anthropic的Youtube，里面讲到“哪怕最粗糙的原型，都能让AI生成效果好一大截”。更准确的说，是能让“AI的成果更靠近用户头脑中的想象”。</p>
+        <p>于是，我搭了四个Agent：规划、检索、分析、审核。一条龙：拆需求 → 翻我的知识库 + 上网搜 → 边聊边生成 → 自己打分重试。 技术栈是DeepSeek负责推理，Qdrant管向量，Next.js + FastAPI 当骨架。上线后支持中英双语、多轮对话。</p>
+        <p>真正的坑在哪？让边牧快快跑起来，但不要侧翻（飞）<br>检索太慢？5个维度的查询并行跑（此处感谢本科学的并行计算，虽然已经快还给教授了，但还记得一些思想），延迟从60秒直接干到25秒。<br>多轮对话记不住上下文？我加了意图识别（新报告/追问/修改）和参数继承，用户不用每句话都复读。</p>
+        <p>然后我很担心大模型梦到那句说哪句，即使我加了一堆约束，从这点来看真的很像一只小狗了。所以我塞一个审核Agent，自己打分，不行就迭代报告，最后分数大于等于7/10时才输出给用户，并给出3条用户自己可以做的，提升报告质量的建议。我本科的大部分时间都花在了PEVC实习上，深知即使AI技术迅猛迭代，一线投资人的思想、语言与观点仍然是投研报告最宝贵的财富。</p>
+        <p>顺便RAG那条向量链路，也折腾了好几轮： chromadb不兼容Python 3.13，换Qdrant。 本地BGE模型带着2GB的torch，Railway构建老超时？换Jina API上云端。顺便还把向量维度迁了几轮，此外私有库和公开库做双层隔离（超级重要），敏感信息脱敏。最后部署链路打通：Vercel + Railway + Qdrant Cloud。</p>
+        <p>综上，停停断断开发了2天，然后又陆续debug了1天。</p>
+        <p>Hound的前身其实是是狗狗夸夸机，这个项目更轻快，纯粹是好玩 + Prompt小实验，是我趁着lovable妇女节不限credits的活动做的。不过我发现有这个活动的时候已经晚上10点了，为了在12点前做出来真是牟足了劲prompy enginneeing啊。</p>
+        <p>我做了9套Prompt模板，对应9种狗狗性格。怎么让狗真的像狗？我把每个犬种拆成四个维度：说话风格、情绪基调、句式偏好、表情符号——全部显式塞进system prompt，再用few-shot固定画风。</p>
+        <p>举个例子，每只狗的性格和语气示例都是预先写好的，比如萨摩耶是温柔治愈系，边牧是冷静学霸，哈士奇是情绪爆炸单细胞傻宝，比熊是阴阳怪气狗，泰迪呆萌，金毛热情，马尔济斯是小迷妹，柯基天真快乐，博美是傲娇暴君但容易破防（用户们最喜欢博美，都说了明日香系人格永不过时）。</p>
+        <p>最好玩的是5%概率触发的「评审团模式」，有5%的概率会触发三只小狗出来同时叭叭。</p>
+        <p>为什么会想要开发狗狗夸夸机？是因为我有几位神经多样性朋友，由此我意识到，“用确定的语言去传达感受”，是一件非常美好，非常重要的事。我希望我的朋友身边能有她们的拉拉队，超越时差，超越大洋，在她们完成了什么想要分享的时候，拉拉队随叫随到，为她们的成果耀武扬威，同时附带吐槽。</p>
+        <p>以上。</p>
+        <p>如果你看到这里觉得有些意思，欢迎来跟我聊聊产品、AI或者狗狗。</p>
+      </article>
+    </div>
+  </div>
+</div>
 
 <!-- ═════════ FOOTER ═════════ -->
 <footer>
   <div class="footer-content">
     <div>
       <div class="footer-block-title">connect</div>
-      <a href="mailto:your@email.com">→ email</a>
+      <a href="mailto:xl2266@cornell.edu">→ email</a>
       <a href="https://github.com" target="_blank">→ github</a>
       <a href="https://linkedin.com" target="_blank">→ linkedin</a>
     </div>
@@ -1874,7 +2203,7 @@ footer {
     </div>
     <div>
       <div class="footer-block-title">read</div>
-      <a href="#">→ resume.pdf</a>
+      <a href="./cv.pdf" target="_blank">→ resume.pdf</a>
       <a href="#writing">→ writing/</a>
     </div>
   </div>
@@ -2092,7 +2421,7 @@ footer {
     const cursor = document.createElement('span');
     cursor.className = 'tw-cursor';
     cursor.textContent = '▍';
-    const charDelay = 32;
+    const charDelay = 16;
 
     await sleep(initialDelay);
     el.appendChild(cursor);
@@ -2103,13 +2432,13 @@ footer {
       await sleep(charDelay);
     }
 
-    await sleep(240);
+    await sleep(120);
     cursor.remove();
   }
 
   async function playSequence() {
     for (const [index, el] of elements.entries()) {
-      await play(el, index === 0 ? 120 : 0);
+      await play(el, index === 0 ? 60 : 0);
     }
   }
 
@@ -2127,55 +2456,97 @@ footer {
   twObserver.observe(elements[0]);
 })();
 
-document.querySelectorAll('.proj-item[data-href]').forEach(card => {
-  const href = card.dataset.href;
-  if (!href) return;
-
-  card.tabIndex = 0;
-
-  card.addEventListener('click', event => {
-    if (event.target.closest('a')) return;
-    window.open(href, '_blank', 'noopener');
-  });
-
-  card.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      window.open(href, '_blank', 'noopener');
-    }
-  });
-});
-
 (() => {
-  const modal = document.getElementById('aestheticModal');
-  const openBtn = document.querySelector('[data-aesthetic-open]');
-  if (!modal || !openBtn) return;
+  document.querySelectorAll('.proj-item[data-href]').forEach(card => {
+    const href = card.dataset.href;
+    if (!href) return;
 
-  const closeTargets = modal.querySelectorAll('[data-aesthetic-close]');
+    card.tabIndex = 0;
 
-  function openModal() {
+    card.addEventListener('click', event => {
+      if (event.target.closest('a, button')) return;
+      window.open(href, '_blank', 'noopener');
+    });
+
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        window.open(href, '_blank', 'noopener');
+      }
+    });
+  });
+
+  const lifeNav = document.querySelector('.dock a[href="#life"]');
+  if (lifeNav) lifeNav.remove();
+
+  const lifeDesktopIcon = document.querySelector('.desktop-icon.pos-3');
+  if (lifeDesktopIcon) lifeDesktopIcon.remove();
+
+  const contactIcon = document.querySelector('.desktop-icon.pos-4');
+  if (contactIcon) {
+    contactIcon.setAttribute('href', '#');
+    contactIcon.dataset.modalTrigger = 'contactModal';
+    const label = contactIcon.querySelector('.icon-label');
+    if (label) label.textContent = 'context.txt';
+  }
+
+  const heroResumeLabel = document.querySelector('.hero-resume .icon-label');
+  if (heroResumeLabel) heroResumeLabel.textContent = '简历';
+
+  function openModal(modal) {
+    if (!modal) return;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
 
-  function closeModal() {
+  function closeModal(modal) {
+    if (!modal) return;
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    if (!document.querySelector('.site-modal.is-open, .aesthetic-modal.is-open')) {
+      document.body.style.overflow = '';
+    }
   }
 
-  openBtn.addEventListener('click', openModal);
-  closeTargets.forEach(el => el.addEventListener('click', closeModal));
+  document.querySelectorAll('[data-modal-trigger]').forEach(trigger => {
+    const modal = document.getElementById(trigger.dataset.modalTrigger);
+    if (!modal) return;
 
-  modal.addEventListener('click', event => {
-    if (event.target === modal) closeModal();
+    if (!trigger.matches('button')) {
+      trigger.tabIndex = trigger.tabIndex >= 0 ? trigger.tabIndex : 0;
+    }
+
+    trigger.addEventListener('click', event => {
+      if (trigger.classList.contains('proj-item') && event.target.closest('a, button')) return;
+      if (trigger.matches('a')) event.preventDefault();
+      openModal(modal);
+    });
+
+    trigger.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openModal(modal);
+      }
+    });
   });
 
+  document.querySelectorAll('.site-modal').forEach(modal => {
+    modal.querySelectorAll('[data-modal-close]').forEach(closeEl => {
+      closeEl.addEventListener('click', () => closeModal(modal));
+    });
+  });
+
+  const aestheticModal = document.getElementById('aestheticModal');
+  if (aestheticModal) {
+    aestheticModal.querySelectorAll('[data-aesthetic-close]').forEach(closeEl => {
+      closeEl.addEventListener('click', () => closeModal(aestheticModal));
+    });
+  }
+
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && modal.classList.contains('is-open')) {
-      closeModal();
-    }
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('.site-modal.is-open, .aesthetic-modal.is-open').forEach(modal => closeModal(modal));
   });
 })();
 
@@ -2199,6 +2570,23 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.1 });
 reveals.forEach(el => observer.observe(el));
+
+(() => {
+  const projects = document.getElementById('projects');
+  const experience = document.getElementById('experience');
+  if (!projects || !experience) return;
+
+  function syncMascots() {
+    const projectRect = projects.getBoundingClientRect();
+    const expRect = experience.getBoundingClientRect();
+    const active = projectRect.top < window.innerHeight * 0.75 && expRect.bottom > window.innerHeight * 0.2;
+    document.body.classList.toggle('project-creatures-active', active);
+  }
+
+  syncMascots();
+  window.addEventListener('scroll', syncMascots, { passive: true });
+  window.addEventListener('resize', syncMascots);
+})();
 
 // ═════════ CUSTOM CURSOR (feather quill — real image) ═════════
 (() => {
@@ -2224,7 +2612,7 @@ reveals.forEach(el => observer.observe(el));
   document.addEventListener('mouseup', () => quill.classList.remove('is-clicking'));
 
   // Hover detection on interactive elements
-  document.querySelectorAll('a, button, .desktop-icon, .dock-item, .blog-item, .proj-item, .menubar-item, .exp-item, .life-cell').forEach(el => {
+  document.querySelectorAll('a, button, .desktop-icon, .dock-item, .blog-item, .proj-item, .menubar-item, .exp-item').forEach(el => {
     el.addEventListener('mouseenter', () => quill.classList.add('is-hovering'));
     el.addEventListener('mouseleave', () => quill.classList.remove('is-hovering'));
   });
